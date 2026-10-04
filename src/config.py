@@ -7,8 +7,18 @@ from dotenv import load_dotenv
 # Read variables from a local .env file (if one exists) into os.environ.
 load_dotenv()
 
-# The one place the Gemini model name lives. Free-tier Flash model.
-MODEL_NAME = "gemini-3.8-flash"
+# The one place the Gemini model name lives. Free-tier Flash-Lite model:
+# gemini-3.8-flash allows only 20 requests/day on the free tier, too few to test.
+MODEL_NAME = "gemini-3.5-flash-lite"
+
+# "low" thinking keeps answers fast; our tasks are simple extraction/summary.
+THINKING_LEVEL = "low"
+
+# Retry temporary Gemini errors (rate limit / overloaded) this many times.
+LLM_MAX_RETRIES = 3
+
+# Free tier has a per-minute limit; wait up to this long if Gemini asks us to.
+LLM_MAX_WAIT_SECONDS = 60
 
 # ClinicalTrials.gov API v2 (used from Phase 2).
 CT_API_BASE_URL = "https://clinicaltrials.gov/api/v2/studies"

@@ -21,10 +21,10 @@ One section per build phase: the concepts used, why things were built this way, 
 - **Single source of configuration**: `MODEL_NAME` is defined once in `config.py`. Switching models is a one-line change.
 - **Wrapping errors**: the Gemini SDK can raise many exception types (invalid key, rate limit, network). `generate_text()` converts all of them into one `LLMError`, so the rest of the app only needs to handle one error type.
 - **Caching the client**: `@lru_cache(maxsize=1)` on `get_client()` means the client is built once and reused instead of being recreated on every call.
-- **Interactions API**: Google's current docs use `client.interactions.create(model=..., input=...)` and read the answer from `interaction.output_text`. The older `client.models.generate_content` still works, but we follow the current docs.
+- **`generate_content` API**: we call `client.models.generate_content(model=..., contents=..., config=...)` and read `response.text`. (Phase 1 first used the newer `client.interactions.create`, but Phase 3 testing showed that path can hang for hours on a rate-limit error. See the Phase 3 notes.)
 
 ### Design decisions
-- **Gemini 3.8 Flash**: listed as free tier on Google's pricing page, fast, and recommended by Google for new projects.
+- **Model**: started with `gemini-3.8-flash`, but its free tier allows only 20 requests per day, which was used up during testing. Switched to `gemini-3.5-flash-lite`, also free tier and recommended by Google for new projects, with a higher allowance and about 1 s responses. Because the name lives only in `config.py`, the switch was a one-line change.
 - **No framework (no LangChain)**: a direct SDK call is a few lines and every step is visible and easy to explain.
 - **`src/` package**: keeps logic separate from the UI (`app.py`), so the same pipeline can run from the terminal, tests, or Streamlit.
 
@@ -83,3 +83,57 @@ A: Every request has a 30-second timeout. Timeouts, HTTP errors, connection erro
 
 **Q: Why clean the data instead of passing the raw JSON along?**
 A: The raw response is deeply nested and has many sites per trial. Flattening it once keeps the rest of the code simple. It also means the LLM later gets a short, predictable input, which saves tokens and lowers the chance of mistakes.
+
+---
+
+## Phase 3 – Prompt engineering: question → filters
+
+### What was built
+In `src/llm.py`:
+| Piece | Job |
+|---|---|
+| `FILTER_SYSTEM_PROMPT` | Instructions that tell Gemini how to turn a question into filters. |
+| `FILTER_SCHEMA` | A JSON Schema, so Gemini's reply always has exactly the four keys. |
+| `parse_json()` | Turns the reply text into a dict, and raises `LLMError` if it isn't valid JSON. |
+| `validate_filters()` | Re-checks every value in Python and drops anything that isn't allowed. |
+| `extract_filters()` | Connects these steps and returns `(filters, warnings)`. |
+
+`tests/try_extraction.py` runs 15 varied questions and compares the answers with expected filters.
+
+### How the prompt is structured
+1. **Role and output format**: "You convert a question into search filters... Reply with JSON only."
+2. **Field definitions**: each field, its allowed values, and plain-English mappings ("enrolling" → `RECRUITING`, "Phase III" → `PHASE3`, a city → its country).
+3. **Rules for hard cases**: use null when unsure, null when the user names two phases or two countries, null for vague words like "late-stage", and all nulls for questions not about trials.
+4. **Few-shot examples**: three examples (a full question, a partial one, and an off-topic one) show the exact output shape. Examples teach the format better than descriptions alone.
+
+### Three layers of defence against bad LLM output
+1. **Structured output**: `response_json_schema` makes Gemini produce JSON with those keys, and `enum` limits phase and status to allowed values.
+2. **`parse_json()`**: if the reply still isn't a JSON object, we raise a clear `LLMError` instead of crashing later.
+3. **`validate_filters()`**: Python checks again. It ignores unknown keys, turns `"null"` or `""` into `None`, normalises case (`"phase 3"`), and drops any phase or status that isn't allowed, adding a warning.
+The idea is to never fully trust model output, even with a schema.
+
+### Data-driven prompt change
+The first prompt said "expand abbreviations" (HIV → "human immunodeficiency virus infection"). Testing against the real API showed this hurts:
+| Search term | Recruiting trials found |
+|---|---|
+| `HIV` | 587 |
+| expanded name | 198 |
+ClinicalTrials.gov already matches synonyms, so the prompt now says "keep the user's own term".
+
+### Reliability problems found while testing (and fixes)
+- **Free-tier limits**: `gemini-3.8-flash` allows 20 requests per day, and `gemini-3.5-flash-lite` allows 15 per minute. A 429 error means "too many requests".
+- **Hanging calls**: the SDK's `interactions` client retries 429 errors automatically and obeys the server's `Retry-After` wait, which was about 14 hours for a used-up daily quota. The program looked frozen. We moved to `generate_content`, which respects `HttpRetryOptions(attempts=1)` (no SDK retries), and set a 30 s timeout.
+- **Our own retry** in `generate_text()` retries only "busy" errors (429, 500, 503), up to 3 tries. It waits as long as Google suggests ("retry in 28 s"), but gives up immediately if that is over 60 s, which means the daily quota is used up.
+
+### Measured result
+After the fixes, `python -m tests.try_extraction` scored **15/15 fully correct**. Typical latency was about 1.2 s per question, and one question took 33.7 s because it waited out the per-minute limit. (This is a manual check. The proper 30-question evaluation is in Phase 6.)
+
+### Likely interview questions
+**Q: How do you make sure the LLM returns valid JSON?**
+A: In three layers. First, Gemini's structured-output mode with a JSON Schema, using enums for phase and status. Second, a parse step that raises a clear error if the reply still isn't a JSON object. Third, Python validation that drops unknown keys and values outside the allowed lists, adding a warning. I never fully trust model output.
+
+**Q: How does your prompt handle ambiguous questions?**
+A: The rule is "null if not clearly mentioned, never guess." Vague terms like "late-stage" don't map to a phase. Two phases or two countries also give null, because the search supports one value. Off-topic questions give all nulls, and the pipeline then refuses to search. I tested each of these cases.
+
+**Q: Tell me about a bug you found while testing.**
+A: Calls started hanging for minutes. I called the REST API directly with curl and got HTTP 429 with a 14-hour retry delay, because the free daily quota was used up. A stack dump showed the SDK was quietly sleeping inside its own retry loop. I switched to the SDK path that lets me turn off built-in retries, then wrote my own retry. It waits only for short, per-minute limits and fails fast with a clear message otherwise.
