@@ -65,11 +65,12 @@ def run_pipeline(question: str) -> PipelineResult:
     # Step 3: top trials -> summary (LLM), Step 4: check summary against the data
     step = time.perf_counter()
     try:
-        summary = summarise_trials(question, result.trials[:TOP_N_FOR_SUMMARY])
+        top_trials = result.trials[:TOP_N_FOR_SUMMARY]
+        summary = summarise_trials(question, top_trials)
     except LLMError as err:
         result.error = f"Trials were found, but the summary failed: {err}"
         return result
-    result.validation = validate_summary(summary, result.trials)
+    result.validation = validate_summary(summary, result.trials, [t["nct_id"] for t in top_trials])
     result.timings["summarise_and_validate"] = time.perf_counter() - step
 
     result.timings["total"] = time.perf_counter() - start
@@ -101,6 +102,8 @@ def print_result(result: PipelineResult) -> None:
         print(f"  REMOVED (unknown NCT ID): {line}")
     for issue in v.issues:
         print(f"  FLAGGED: {issue}")
+    if v.missing_ids:
+        print(f"  Note: summary left out {', '.join(v.missing_ids)} (see the list above)")
 
     timings = ", ".join(f"{step} {secs:.1f}s" for step, secs in result.timings.items())
     print(f"\nTimings: {timings}")

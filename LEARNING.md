@@ -190,3 +190,47 @@ A: An unknown NCT ID means the trial may not exist, and showing it could send a 
 
 **Q: How do you know your validator works if the model rarely hallucinates?**
 A: I tested it with planted errors. `tests/test_validation.py` builds summaries with invented IDs and wrong phase, status and sponsor values, then asserts that each one is caught. That needs no API calls, so it is fast and gives the same result every run.
+
+---
+
+## Phase 5 – Streamlit UI and deployment
+
+### What was built
+`app.py`, a single page:
+1. **Search box** inside an `st.form`, so pressing Enter or clicking Search runs one query.
+2. **Example buttons**: each uses an `on_click` callback that writes the question into the search box's session state and sets a "run now" flag.
+3. **Extracted filters** as four `st.metric` tiles. "Any" means the AI found nothing for that field, so the user can see exactly how the question was read.
+4. **Results table** (`st.dataframe`) with a `LinkColumn`: each NCT ID opens its ClinicalTrials.gov page.
+5. **Validated summary**, followed by a green "validation passed" box or a yellow list of removed and flagged items, plus a note when the summary skipped a trial.
+6. **Timings** for each step, and a "not medical advice" disclaimer.
+
+### Concepts
+- **How Streamlit runs**: the whole script re-runs from top to bottom on every click. `st.session_state` is the dictionary that survives between re-runs. We use it for the search text, the "run now" flag and the results cache.
+- **Widget callbacks**: a widget's value can only be changed before the widget is drawn. That is why the example buttons use `on_click`, which runs before the next re-run, instead of setting the value afterwards.
+- **UI is a thin layer**: `app.py` has no business logic. It calls `run_pipeline()` and displays the result, so the same pipeline works from the terminal, tests and the web page.
+- **Caching only successes**: answers are cached per session to save free-tier quota. Results with an error are not cached, so a temporary rate limit doesn't "stick" for an hour. That is why we wrote a small dict cache instead of `@st.cache_data`, which would cache errors too.
+- **Headless UI testing**: `streamlit.testing.v1.AppTest` runs the app without a browser, clicks buttons and reads what was drawn. We used it to test the example buttons, the off-topic case and the empty-input case.
+
+### Omission check (added in this phase)
+In one UI test the model summarised only 3 of the 5 trials. That is not a hallucination, but the user should know. `validate_summary()` now also returns `missing_ids`, the trials the model was asked to cover but skipped, and the UI shows them. The prompt now says "one bullet for EVERY trial (do not skip any)". This is tested in `test_missing_trials_are_reported`.
+
+### Deploying on Streamlit Community Cloud
+1. Push the repo to GitHub, after checking that `.env` is not in `git status`.
+2. Go to https://share.streamlit.io, sign in with GitHub, and click **Create app**.
+3. Pick the repo `SurajGupta-27/TrialScout`, branch `main`, main file `app.py`.
+4. Under **Advanced settings**, choose Python 3.12 and paste this into **Secrets** (TOML format):
+   ```toml
+   GEMINI_API_KEY = "your-real-key"
+   ```
+5. Click **Deploy**. Cloud installs `requirements.txt` and starts the app. `get_api_key()` finds no `.env` there and reads `st.secrets["GEMINI_API_KEY"]` instead.
+6. To change the key later, open the app's **Settings → Secrets**, then reboot the app.
+
+### Likely interview questions
+**Q: How does Streamlit keep state if the script re-runs on every click?**
+A: Through `st.session_state`, a per-user dictionary that survives re-runs. I store the current question, a flag set by the example buttons, and a cache of successful results there. Everything else is recomputed, which keeps the code simple.
+
+**Q: How do you handle secrets differently locally and in production?**
+A: The code has one function, `get_api_key()`. It checks environment variables first (filled from `.env` by python-dotenv locally), then `st.secrets`, which Streamlit Cloud fills from its encrypted secrets settings. The key is never in the repo, and `.streamlit/secrets.toml` is in `.gitignore` too.
+
+**Q: Why not put the logic straight into `app.py`?**
+A: Separation of concerns. The UI only displays a `PipelineResult`. The pipeline is plain Python I can run from the terminal and test without a browser. If I changed the UI framework, the pipeline wouldn't change at all.

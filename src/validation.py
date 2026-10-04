@@ -5,6 +5,8 @@ Two checks, line by line:
    A line with an unknown ID is REMOVED (the model invented or misremembered it).
 2. For a line about exactly one trial, the phase, status and sponsor it states
    must match that trial's data. A mismatching line is kept but FLAGGED.
+We also note which summarised trials the summary left out (an omission, not a
+hallucination), so the user knows to check the table.
 """
 
 import re
@@ -28,6 +30,7 @@ class ValidationResult:
     unknown_ids: list[str] = field(default_factory=list)
     removed_lines: list[str] = field(default_factory=list)
     issues: list[str] = field(default_factory=list)
+    missing_ids: list[str] = field(default_factory=list)
 
     @property
     def hallucination_count(self) -> int:
@@ -89,8 +92,14 @@ def check_details(line: str, trial: dict) -> list[str]:
     return problems
 
 
-def validate_summary(summary: str, trials: list[dict]) -> ValidationResult:
-    """Remove lines with unknown NCT IDs and flag lines whose details don't match."""
+def validate_summary(
+    summary: str, trials: list[dict], summarised_ids: list[str] | None = None
+) -> ValidationResult:
+    """Remove lines with unknown NCT IDs and flag lines whose details don't match.
+
+    trials: every fetched trial (an ID is valid if it is in here).
+    summarised_ids: the trials the model was asked to cover, to report omissions.
+    """
     trials_by_id = {t["nct_id"].upper(): t for t in trials}
     result = ValidationResult(summary="")
     kept_lines = []
@@ -113,4 +122,6 @@ def validate_summary(summary: str, trials: list[dict]) -> ValidationResult:
         kept_lines.append(line)
 
     result.summary = "\n".join(kept_lines).strip()
+    mentioned = set(find_nct_ids(result.summary))
+    result.missing_ids = [i for i in summarised_ids or [] if i.upper() not in mentioned]
     return result

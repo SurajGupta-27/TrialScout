@@ -242,7 +242,7 @@ given to you. Never add trials, NCT IDs, numbers or facts that are not in the da
 
 Format (plain text, no markdown headings):
 - First line: one sentence answering the user's question in general terms.
-- Then one bullet per trial, in the order given, exactly like this:
+- Then one bullet for EVERY trial given (do not skip any), in order, exactly like this:
   - [NCT ID] What the trial studies, in plain words. Phase: <phase>. Status: <status>. Sponsor: <sponsor>.
 - Copy the NCT ID, phase, status and sponsor exactly as written in the data.
 - Keep it under 180 words. Do not give medical advice.

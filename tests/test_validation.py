@@ -56,6 +56,14 @@ def test_lowercase_id_still_checked() -> None:
     assert result.unknown_ids == ["NCT09999999"]
 
 
+def test_missing_trials_are_reported() -> None:
+    """Trials the model was asked to cover but skipped are listed (not counted as hallucinations)."""
+    summary = "- [NCT01111111] Real. Phase: Phase 3. Status: Recruiting. Sponsor: Eli Lilly and Company."
+    result = validate_summary(summary, TRIALS, ["NCT01111111", "NCT02222222"])
+    assert result.missing_ids == ["NCT02222222"]
+    assert result.hallucination_count == 0
+
+
 def test_phase_codes() -> None:
     """Phase text in different styles is read the same way."""
     assert phase_codes("Phase 2/Phase 3") == {"PHASE2", "PHASE3"}
