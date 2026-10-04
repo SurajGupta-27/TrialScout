@@ -137,3 +137,56 @@ A: The rule is "null if not clearly mentioned, never guess." Vague terms like "l
 
 **Q: Tell me about a bug you found while testing.**
 A: Calls started hanging for minutes. I called the REST API directly with curl and got HTTP 429 with a 14-hour retry delay, because the free daily quota was used up. A stack dump showed the SDK was quietly sleeping inside its own retry loop. I switched to the SDK path that lets me turn off built-in retries, then wrote my own retry. It waits only for short, per-minute limits and fails fast with a clear message otherwise.
+
+---
+
+## Phase 4 – Summary, validation, and the full pipeline
+
+### What was built
+| File | Job |
+|---|---|
+| `src/llm.py` → `summarise_trials()` | Sends the top 5 trials, as short labelled text, to Gemini with a strict "use only this data" prompt. |
+| `src/validation.py` | Checks the summary line by line against the fetched trials. |
+| `src/pipeline.py` | `run_pipeline(question)` runs all four steps and returns one `PipelineResult`. |
+| `src/trials_api.py` → `format_phase()`, `format_status()` | Turn `PHASE2`+`PHASE3` into "Phase 2/Phase 3". Shared by the summary, the validator and the UI. |
+| `tests/test_validation.py` | Feeds the validator summaries with deliberate mistakes and checks it catches each one. No API key needed. |
+
+### The pipeline
+```
+question → extract_filters (LLM) → search_trials (API) → summarise_trials (LLM) → validate_summary (Python)
+               ↓ all null?              ↓ 0 results?
+         "not a trial question"     "no trials match", with no AI answer
+```
+Each step can fail on its own. The pipeline catches the expected errors (`LLMError`, `TrialsAPIError`, `ValueError`) and puts a readable message in `result.error`. The UI therefore never crashes, and if only the summary fails it still has the trials to show.
+
+### How validation works
+1. **Find every NCT ID** in each line with the regex `NCT\d{8}` (case-insensitive, so "nct0..." can't slip through).
+2. **Unknown ID → remove the line.** If an ID is not among the fetched trials, the model invented it, so that line is deleted and listed in `removed_lines`.
+3. **Known ID → check details.** The prompt makes each bullet end with `Phase: … . Status: … . Sponsor: … .`. This fixed format is what makes checking possible: regexes pull out each value, which is compared with the real record.
+   - phase: compared as sets of codes, so "Phase 2/3" and "Phase 2/Phase 3" both match `{PHASE2, PHASE3}`.
+   - status: compared on letters only, so "Active, not recruiting" matches "active not recruiting".
+   - sponsor: passes if one name contains the other.
+   A mismatch keeps the line but adds `[FLAGGED: …]` and records the exact difference.
+4. `hallucination_count` = invented IDs + wrong details. Phase 6 reports it.
+
+### Design decisions
+- **Remove vs flag**: an invented trial is pure fiction, so it is removed. A real trial with one wrong detail is still useful, so it is flagged and the user is warned.
+- **No AI answer when there are no results**: if the search returns nothing, we never call the summary model. It would have nothing real to summarise and could only invent.
+- **Grounding the prompt**: the model sees only short labelled facts (ID, title, phase, status, sponsor, countries), so everything it needs is in front of it. The prompt forbids anything outside the data.
+- **Structured output, then programmatic checks**: asking for a fixed bullet format is a prompt-engineering choice made so that the Python validator can check it.
+- **Validate against all 20 fetched trials, not just the top 5**: the rule is "the ID must exist in the fetched results".
+
+### Measured results
+- `python -m tests.test_validation`: 5/5 tests pass. Planted invented IDs, wrong phase, wrong status, wrong sponsor and a lower-case ID are all caught.
+- Live run, "Phase 3 diabetes trials recruiting in India": 15 trials found, 5 summarised, 0 problems caught, 4.6 s total (2.3 s extract, 0.7 s search, 1.6 s summary).
+- No-results and off-topic questions return the right message, with no AI summary.
+
+### Likely interview questions
+**Q: How do you stop the LLM from hallucinating trials?**
+A: Three ways. First, grounding: the model only sees the trials we fetched, with a "use only this data" instruction. Second, a fixed bullet format with labelled fields. Third, a Python validator that removes any line whose NCT ID wasn't fetched, and flags lines whose phase, status or sponsor don't match the record. If the search finds nothing, we don't call the LLM at all.
+
+**Q: Why remove some lines but only flag others?**
+A: An unknown NCT ID means the trial may not exist, and showing it could send a patient or researcher after a fake study, so it is removed. A real trial with a wrong detail is still a real lead, so it stays, clearly flagged, with the correct value shown.
+
+**Q: How do you know your validator works if the model rarely hallucinates?**
+A: I tested it with planted errors. `tests/test_validation.py` builds summaries with invented IDs and wrong phase, status and sponsor values, then asserts that each one is caught. That needs no API calls, so it is fast and gives the same result every run.

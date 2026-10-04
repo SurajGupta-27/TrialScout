@@ -27,6 +27,20 @@ class TrialsAPIError(Exception):
     """Raised when ClinicalTrials.gov cannot be reached or returns an error."""
 
 
+def format_phase(phases: list[str]) -> str:
+    """Turn ["PHASE2", "PHASE3"] into "Phase 2/Phase 3" for people to read."""
+    if not phases or phases == ["NA"]:
+        return "Not applicable"
+    return "/".join(p.replace("EARLY_PHASE", "Early Phase ").replace("PHASE", "Phase ") for p in phases)
+
+
+def format_status(status: str) -> str:
+    """Turn "ACTIVE_NOT_RECRUITING" into "Active, not recruiting"."""
+    if status == "ACTIVE_NOT_RECRUITING":
+        return "Active, not recruiting"
+    return status.replace("_", " ").capitalize()
+
+
 def build_params(
     condition: str | None,
     phase: str | None,

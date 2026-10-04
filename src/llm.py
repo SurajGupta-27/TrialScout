@@ -18,6 +18,7 @@ from src.config import (
     VALID_STATUSES,
     get_api_key,
 )
+from src.trials_api import format_phase, format_status
 
 # HTTP codes that mean "busy, try again later" rather than "your request is wrong".
 RETRYABLE_STATUS_CODES = {429, 500, 503}
@@ -229,6 +230,55 @@ def extract_filters(question: str) -> tuple[dict, list[str]]:
         json_schema=FILTER_SCHEMA,
     )
     return validate_filters(parse_json(reply))
+
+
+# ---------------------------------------------------------------------------
+# Summarisation (Phase 4)
+# ---------------------------------------------------------------------------
+
+SUMMARY_SYSTEM_PROMPT = """\
+You summarise clinical trial search results for a user. Use ONLY the trial data
+given to you. Never add trials, NCT IDs, numbers or facts that are not in the data.
+
+Format (plain text, no markdown headings):
+- First line: one sentence answering the user's question in general terms.
+- Then one bullet per trial, in the order given, exactly like this:
+  - [NCT ID] What the trial studies, in plain words. Phase: <phase>. Status: <status>. Sponsor: <sponsor>.
+- Copy the NCT ID, phase, status and sponsor exactly as written in the data.
+- Keep it under 180 words. Do not give medical advice.
+"""
+
+
+def format_trials_for_prompt(trials: list[dict]) -> str:
+    """Write trials as short labelled text blocks, the only facts the model sees."""
+    blocks = []
+    for t in trials:
+        countries = ", ".join(t["countries"][:8])
+        if len(t["countries"]) > 8:
+            countries += f" (+{len(t['countries']) - 8} more)"
+        blocks.append(
+            f"NCT ID: {t['nct_id']}\n"
+            f"Title: {t['title']}\n"
+            f"Conditions: {', '.join(t['conditions'][:5])}\n"
+            f"Phase: {format_phase(t['phase'])}\n"
+            f"Status: {format_status(t['status'])}\n"
+            f"Sponsor: {t['sponsor']}\n"
+            f"Countries: {countries or 'Not listed'}"
+        )
+    return "\n\n".join(blocks)
+
+
+def summarise_trials(question: str, trials: list[dict]) -> str:
+    """Ask Gemini for a short, grounded summary of the given trials.
+
+    Raises:
+        ValueError: if trials is empty (we never ask the model to summarise nothing).
+        LLMError: if Gemini fails.
+    """
+    if not trials:
+        raise ValueError("No trials to summarise.")
+    prompt = f"User question: {question}\n\nTrials:\n\n{format_trials_for_prompt(trials)}"
+    return generate_text(prompt=prompt, system_instruction=SUMMARY_SYSTEM_PROMPT)
 
 
 if __name__ == "__main__":
