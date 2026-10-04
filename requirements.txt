@@ -1,0 +1,4 @@
+google-genai>=2.28.0
+requests>=2.32
+streamlit>=1.50
+python-dotenv>=1.0
