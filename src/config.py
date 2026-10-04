@@ -13,6 +13,23 @@ MODEL_NAME = "gemini-3.8-flash"
 # ClinicalTrials.gov API v2 (used from Phase 2).
 CT_API_BASE_URL = "https://clinicaltrials.gov/api/v2/studies"
 
+# Allowed values, copied from the API's official OpenAPI spec (/api/oas/v2).
+VALID_PHASES = {"EARLY_PHASE1", "PHASE1", "PHASE2", "PHASE3", "PHASE4", "NA"}
+VALID_STATUSES = {
+    "RECRUITING",
+    "NOT_YET_RECRUITING",
+    "ACTIVE_NOT_RECRUITING",
+    "ENROLLING_BY_INVITATION",
+    "COMPLETED",
+    "SUSPENDED",
+    "TERMINATED",
+    "WITHDRAWN",
+    "UNKNOWN",
+}
+
+# Max trials fetched per search (the API allows up to 1,000).
+MAX_RESULTS = 20
+
 # How long to wait for any network call before giving up (seconds).
 REQUEST_TIMEOUT_SECONDS = 30
 
