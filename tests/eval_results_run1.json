@@ -1,0 +1,1075 @@
+{
+  "run_at": "2026-10-04T10:52:39+00:00",
+  "model": "gemini-3.5-flash-lite",
+  "metrics": {
+    "questions": 30,
+    "filter_exact_match": 28,
+    "field_accuracy": {
+      "condition": 28,
+      "phase": 30,
+      "status": 30,
+      "country": 30
+    },
+    "by_category": {
+      "basic": {
+        "correct": 8,
+        "total": 8
+      },
+      "synonyms": {
+        "correct": 6,
+        "total": 6
+      },
+      "abbreviation": {
+        "correct": 3,
+        "total": 3
+      },
+      "location": {
+        "correct": 4,
+        "total": 4
+      },
+      "ambiguous": {
+        "correct": 4,
+        "total": 4
+      },
+      "typo": {
+        "correct": 0,
+        "total": 2
+      },
+      "off-topic": {
+        "correct": 2,
+        "total": 2
+      },
+      "no-results": {
+        "correct": 1,
+        "total": 1
+      }
+    },
+    "errors": 0,
+    "no_summary_messages": 5,
+    "summaries_validated": 25,
+    "nct_ids_verified": 121,
+    "invented_ids_removed": 0,
+    "detail_issues_flagged": 0,
+    "trials_skipped_by_summary": 0,
+    "seconds_mean": 4.74,
+    "seconds_median": 4.99,
+    "seconds_max": 8.48
+  },
+  "records": [
+    {
+      "id": 1,
+      "category": "basic",
+      "question": "Recruiting lung cancer trials in France",
+      "expected": {
+        "condition": "lung cancer",
+        "phase": null,
+        "status": "RECRUITING",
+        "country": "France"
+      },
+      "got": {
+        "condition": "lung cancer",
+        "phase": null,
+        "status": "RECRUITING",
+        "country": "France"
+      },
+      "fields_correct": {
+        "condition": true,
+        "phase": true,
+        "status": true,
+        "country": true
+      },
+      "all_correct": true,
+      "seconds": 4.73,
+      "error": null,
+      "message": null,
+      "total_trials": 245,
+      "validation": {
+        "ids_in_final_summary": 5,
+        "invented_ids_removed": [],
+        "detail_issues_flagged": [],
+        "trials_skipped": []
+      }
+    },
+    {
+      "id": 2,
+      "category": "basic",
+      "question": "Phase 2 melanoma studies",
+      "expected": {
+        "condition": "melanoma",
+        "phase": "PHASE2",
+        "status": null,
+        "country": null
+      },
+      "got": {
+        "condition": "melanoma",
+        "phase": "PHASE2",
+        "status": null,
+        "country": null
+      },
+      "fields_correct": {
+        "condition": true,
+        "phase": true,
+        "status": true,
+        "country": true
+      },
+      "all_correct": true,
+      "seconds": 8.48,
+      "error": null,
+      "message": null,
+      "total_trials": 1544,
+      "validation": {
+        "ids_in_final_summary": 5,
+        "invented_ids_removed": [],
+        "detail_issues_flagged": [],
+        "trials_skipped": []
+      }
+    },
+    {
+      "id": 3,
+      "category": "basic",
+      "question": "Completed obesity trials in Australia",
+      "expected": {
+        "condition": "obesity",
+        "phase": null,
+        "status": "COMPLETED",
+        "country": "Australia"
+      },
+      "got": {
+        "condition": "obesity",
+        "phase": null,
+        "status": "COMPLETED",
+        "country": "Australia"
+      },
+      "fields_correct": {
+        "condition": true,
+        "phase": true,
+        "status": true,
+        "country": true
+      },
+      "all_correct": true,
+      "seconds": 3.48,
+      "error": null,
+      "message": null,
+      "total_trials": 102,
+      "validation": {
+        "ids_in_final_summary": 5,
+        "invented_ids_removed": [],
+        "detail_issues_flagged": [],
+        "trials_skipped": []
+      }
+    },
+    {
+      "id": 4,
+      "category": "basic",
+      "question": "Phase 3 rheumatoid arthritis trials recruiting in Spain",
+      "expected": {
+        "condition": "rheumatoid arthritis",
+        "phase": "PHASE3",
+        "status": "RECRUITING",
+        "country": "Spain"
+      },
+      "got": {
+        "condition": "rheumatoid arthritis",
+        "phase": "PHASE3",
+        "status": "RECRUITING",
+        "country": "Spain"
+      },
+      "fields_correct": {
+        "condition": true,
+        "phase": true,
+        "status": true,
+        "country": true
+      },
+      "all_correct": true,
+      "seconds": 5.24,
+      "error": null,
+      "message": null,
+      "total_trials": 1,
+      "validation": {
+        "ids_in_final_summary": 1,
+        "invented_ids_removed": [],
+        "detail_issues_flagged": [],
+        "trials_skipped": []
+      }
+    },
+    {
+      "id": 5,
+      "category": "basic",
+      "question": "multiple sclerosis trials",
+      "expected": {
+        "condition": "multiple sclerosis",
+        "phase": null,
+        "status": null,
+        "country": null
+      },
+      "got": {
+        "condition": "multiple sclerosis",
+        "phase": null,
+        "status": null,
+        "country": null
+      },
+      "fields_correct": {
+        "condition": true,
+        "phase": true,
+        "status": true,
+        "country": true
+      },
+      "all_correct": true,
+      "seconds": 6.54,
+      "error": null,
+      "message": null,
+      "total_trials": 3938,
+      "validation": {
+        "ids_in_final_summary": 5,
+        "invented_ids_removed": [],
+        "detail_issues_flagged": [],
+        "trials_skipped": []
+      }
+    },
+    {
+      "id": 6,
+      "category": "basic",
+      "question": "Phase 1 pancreatic cancer trials in China",
+      "expected": {
+        "condition": "pancreatic cancer",
+        "phase": "PHASE1",
+        "status": null,
+        "country": "China"
+      },
+      "got": {
+        "condition": "pancreatic cancer",
+        "phase": "PHASE1",
+        "status": null,
+        "country": "China"
+      },
+      "fields_correct": {
+        "condition": true,
+        "phase": true,
+        "status": true,
+        "country": true
+      },
+      "all_correct": true,
+      "seconds": 7.06,
+      "error": null,
+      "message": null,
+      "total_trials": 205,
+      "validation": {
+        "ids_in_final_summary": 5,
+        "invented_ids_removed": [],
+        "detail_issues_flagged": [],
+        "trials_skipped": []
+      }
+    },
+    {
+      "id": 7,
+      "category": "basic",
+      "question": "Terminated depression studies",
+      "expected": {
+        "condition": "depression",
+        "phase": null,
+        "status": "TERMINATED",
+        "country": null
+      },
+      "got": {
+        "condition": "depression",
+        "phase": null,
+        "status": "TERMINATED",
+        "country": null
+      },
+      "fields_correct": {
+        "condition": true,
+        "phase": true,
+        "status": true,
+        "country": true
+      },
+      "all_correct": true,
+      "seconds": 3.16,
+      "error": null,
+      "message": null,
+      "total_trials": 599,
+      "validation": {
+        "ids_in_final_summary": 5,
+        "invented_ids_removed": [],
+        "detail_issues_flagged": [],
+        "trials_skipped": []
+      }
+    },
+    {
+      "id": 8,
+      "category": "basic",
+      "question": "Phase 4 migraine trials in Italy",
+      "expected": {
+        "condition": "migraine",
+        "phase": "PHASE4",
+        "status": null,
+        "country": "Italy"
+      },
+      "got": {
+        "condition": "migraine",
+        "phase": "PHASE4",
+        "status": null,
+        "country": "Italy"
+      },
+      "fields_correct": {
+        "condition": true,
+        "phase": true,
+        "status": true,
+        "country": true
+      },
+      "all_correct": true,
+      "seconds": 5.56,
+      "error": null,
+      "message": null,
+      "total_trials": 15,
+      "validation": {
+        "ids_in_final_summary": 5,
+        "invented_ids_removed": [],
+        "detail_issues_flagged": [],
+        "trials_skipped": []
+      }
+    },
+    {
+      "id": 9,
+      "category": "synonyms",
+      "question": "Are any Phase III sickle cell disease trials open right now?",
+      "expected": {
+        "condition": "sickle cell disease",
+        "phase": "PHASE3",
+        "status": "RECRUITING",
+        "country": null
+      },
+      "got": {
+        "condition": "sickle cell disease",
+        "phase": "PHASE3",
+        "status": "RECRUITING",
+        "country": null
+      },
+      "fields_correct": {
+        "condition": true,
+        "phase": true,
+        "status": true,
+        "country": true
+      },
+      "all_correct": true,
+      "seconds": 4.08,
+      "error": null,
+      "message": null,
+      "total_trials": 13,
+      "validation": {
+        "ids_in_final_summary": 5,
+        "invented_ids_removed": [],
+        "detail_issues_flagged": [],
+        "trials_skipped": []
+      }
+    },
+    {
+      "id": 10,
+      "category": "synonyms",
+      "question": "Finished epilepsy trials in Canada",
+      "expected": {
+        "condition": "epilepsy",
+        "phase": null,
+        "status": "COMPLETED",
+        "country": "Canada"
+      },
+      "got": {
+        "condition": "epilepsy",
+        "phase": null,
+        "status": "COMPLETED",
+        "country": "Canada"
+      },
+      "fields_correct": {
+        "condition": true,
+        "phase": true,
+        "status": true,
+        "country": true
+      },
+      "all_correct": true,
+      "seconds": 3.64,
+      "error": null,
+      "message": null,
+      "total_trials": 79,
+      "validation": {
+        "ids_in_final_summary": 5,
+        "invented_ids_removed": [],
+        "detail_issues_flagged": [],
+        "trials_skipped": []
+      }
+    },
+    {
+      "id": 11,
+      "category": "synonyms",
+      "question": "Schizophrenia trials that will start soon",
+      "expected": {
+        "condition": "schizophrenia",
+        "phase": null,
+        "status": "NOT_YET_RECRUITING",
+        "country": null
+      },
+      "got": {
+        "condition": "schizophrenia",
+        "phase": null,
+        "status": "NOT_YET_RECRUITING",
+        "country": null
+      },
+      "fields_correct": {
+        "condition": true,
+        "phase": true,
+        "status": true,
+        "country": true
+      },
+      "all_correct": true,
+      "seconds": 3.73,
+      "error": null,
+      "message": null,
+      "total_trials": 148,
+      "validation": {
+        "ids_in_final_summary": 5,
+        "invented_ids_removed": [],
+        "detail_issues_flagged": [],
+        "trials_skipped": []
+      }
+    },
+    {
+      "id": 12,
+      "category": "synonyms",
+      "question": "Phase II trials looking for volunteers with Crohn's disease",
+      "expected": {
+        "condition": [
+          "crohn's disease",
+          "crohn"
+        ],
+        "phase": "PHASE2",
+        "status": "RECRUITING",
+        "country": null
+      },
+      "got": {
+        "condition": "Crohn's disease",
+        "phase": "PHASE2",
+        "status": "RECRUITING",
+        "country": null
+      },
+      "fields_correct": {
+        "condition": true,
+        "phase": true,
+        "status": true,
+        "country": true
+      },
+      "all_correct": true,
+      "seconds": 5.75,
+      "error": null,
+      "message": null,
+      "total_trials": 41,
+      "validation": {
+        "ids_in_final_summary": 5,
+        "invented_ids_removed": [],
+        "detail_issues_flagged": [],
+        "trials_skipped": []
+      }
+    },
+    {
+      "id": 13,
+      "category": "synonyms",
+      "question": "Ovarian cancer studies that were stopped early",
+      "expected": {
+        "condition": "ovarian cancer",
+        "phase": null,
+        "status": "TERMINATED",
+        "country": null
+      },
+      "got": {
+        "condition": "ovarian cancer",
+        "phase": null,
+        "status": "TERMINATED",
+        "country": null
+      },
+      "fields_correct": {
+        "condition": true,
+        "phase": true,
+        "status": true,
+        "country": true
+      },
+      "all_correct": true,
+      "seconds": 6.01,
+      "error": null,
+      "message": null,
+      "total_trials": 521,
+      "validation": {
+        "ids_in_final_summary": 5,
+        "invented_ids_removed": [],
+        "detail_issues_flagged": [],
+        "trials_skipped": []
+      }
+    },
+    {
+      "id": 14,
+      "category": "synonyms",
+      "question": "Invitation-only autism trials",
+      "expected": {
+        "condition": "autism",
+        "phase": null,
+        "status": "ENROLLING_BY_INVITATION",
+        "country": null
+      },
+      "got": {
+        "condition": "autism",
+        "phase": null,
+        "status": "ENROLLING_BY_INVITATION",
+        "country": null
+      },
+      "fields_correct": {
+        "condition": true,
+        "phase": true,
+        "status": true,
+        "country": true
+      },
+      "all_correct": true,
+      "seconds": 3.65,
+      "error": null,
+      "message": null,
+      "total_trials": 36,
+      "validation": {
+        "ids_in_final_summary": 5,
+        "invented_ids_removed": [],
+        "detail_issues_flagged": [],
+        "trials_skipped": []
+      }
+    },
+    {
+      "id": 15,
+      "category": "abbreviation",
+      "question": "Recruiting CKD trials in the USA",
+      "expected": {
+        "condition": [
+          "CKD",
+          "chronic kidney disease"
+        ],
+        "phase": null,
+        "status": "RECRUITING",
+        "country": [
+          "United States",
+          "USA"
+        ]
+      },
+      "got": {
+        "condition": "CKD",
+        "phase": null,
+        "status": "RECRUITING",
+        "country": "United States"
+      },
+      "fields_correct": {
+        "condition": true,
+        "phase": true,
+        "status": true,
+        "country": true
+      },
+      "all_correct": true,
+      "seconds": 5.82,
+      "error": null,
+      "message": null,
+      "total_trials": 123,
+      "validation": {
+        "ids_in_final_summary": 5,
+        "invented_ids_removed": [],
+        "detail_issues_flagged": [],
+        "trials_skipped": []
+      }
+    },
+    {
+      "id": 16,
+      "category": "abbreviation",
+      "question": "Phase 3 AML studies",
+      "expected": {
+        "condition": [
+          "AML",
+          "acute myeloid leukemia"
+        ],
+        "phase": "PHASE3",
+        "status": null,
+        "country": null
+      },
+      "got": {
+        "condition": "AML",
+        "phase": "PHASE3",
+        "status": null,
+        "country": null
+      },
+      "fields_correct": {
+        "condition": true,
+        "phase": true,
+        "status": true,
+        "country": true
+      },
+      "all_correct": true,
+      "seconds": 7.04,
+      "error": null,
+      "message": null,
+      "total_trials": 401,
+      "validation": {
+        "ids_in_final_summary": 5,
+        "invented_ids_removed": [],
+        "detail_issues_flagged": [],
+        "trials_skipped": []
+      }
+    },
+    {
+      "id": 17,
+      "category": "abbreviation",
+      "question": "RSV vaccine trials in the UK",
+      "expected": {
+        "condition": [
+          "RSV",
+          "respiratory syncytial virus"
+        ],
+        "phase": null,
+        "status": null,
+        "country": [
+          "United Kingdom",
+          "UK"
+        ]
+      },
+      "got": {
+        "condition": "RSV vaccine",
+        "phase": null,
+        "status": null,
+        "country": "United Kingdom"
+      },
+      "fields_correct": {
+        "condition": true,
+        "phase": true,
+        "status": true,
+        "country": true
+      },
+      "all_correct": true,
+      "seconds": 3.99,
+      "error": null,
+      "message": null,
+      "total_trials": 26,
+      "validation": {
+        "ids_in_final_summary": 5,
+        "invented_ids_removed": [],
+        "detail_issues_flagged": [],
+        "trials_skipped": []
+      }
+    },
+    {
+      "id": 18,
+      "category": "location",
+      "question": "Hepatitis B trials in Shanghai",
+      "expected": {
+        "condition": "hepatitis B",
+        "phase": null,
+        "status": null,
+        "country": "China"
+      },
+      "got": {
+        "condition": "Hepatitis B",
+        "phase": null,
+        "status": null,
+        "country": "China"
+      },
+      "fields_correct": {
+        "condition": true,
+        "phase": true,
+        "status": true,
+        "country": true
+      },
+      "all_correct": true,
+      "seconds": 6.44,
+      "error": null,
+      "message": null,
+      "total_trials": 579,
+      "validation": {
+        "ids_in_final_summary": 5,
+        "invented_ids_removed": [],
+        "detail_issues_flagged": [],
+        "trials_skipped": []
+      }
+    },
+    {
+      "id": 19,
+      "category": "location",
+      "question": "Recruiting stroke trials in Toronto",
+      "expected": {
+        "condition": "stroke",
+        "phase": null,
+        "status": "RECRUITING",
+        "country": "Canada"
+      },
+      "got": {
+        "condition": "stroke",
+        "phase": null,
+        "status": "RECRUITING",
+        "country": "Canada"
+      },
+      "fields_correct": {
+        "condition": true,
+        "phase": true,
+        "status": true,
+        "country": true
+      },
+      "all_correct": true,
+      "seconds": 3.29,
+      "error": null,
+      "message": null,
+      "total_trials": 74,
+      "validation": {
+        "ids_in_final_summary": 5,
+        "invented_ids_removed": [],
+        "detail_issues_flagged": [],
+        "trials_skipped": []
+      }
+    },
+    {
+      "id": 20,
+      "category": "location",
+      "question": "Tuberculosis studies in Bangalore",
+      "expected": {
+        "condition": "tuberculosis",
+        "phase": null,
+        "status": null,
+        "country": "India"
+      },
+      "got": {
+        "condition": "tuberculosis",
+        "phase": null,
+        "status": null,
+        "country": "India"
+      },
+      "fields_correct": {
+        "condition": true,
+        "phase": true,
+        "status": true,
+        "country": true
+      },
+      "all_correct": true,
+      "seconds": 6.64,
+      "error": null,
+      "message": null,
+      "total_trials": 96,
+      "validation": {
+        "ids_in_final_summary": 5,
+        "invented_ids_removed": [],
+        "detail_issues_flagged": [],
+        "trials_skipped": []
+      }
+    },
+    {
+      "id": 21,
+      "category": "location",
+      "question": "Phase 2 heart failure trials in Texas",
+      "expected": {
+        "condition": "heart failure",
+        "phase": "PHASE2",
+        "status": null,
+        "country": [
+          "United States",
+          "USA"
+        ]
+      },
+      "got": {
+        "condition": "heart failure",
+        "phase": "PHASE2",
+        "status": null,
+        "country": "United States"
+      },
+      "fields_correct": {
+        "condition": true,
+        "phase": true,
+        "status": true,
+        "country": true
+      },
+      "all_correct": true,
+      "seconds": 6.58,
+      "error": null,
+      "message": null,
+      "total_trials": 376,
+      "validation": {
+        "ids_in_final_summary": 5,
+        "invented_ids_removed": [],
+        "detail_issues_flagged": [],
+        "trials_skipped": []
+      }
+    },
+    {
+      "id": 22,
+      "category": "ambiguous",
+      "question": "Phase 1 or Phase 2 lymphoma trials",
+      "expected": {
+        "condition": "lymphoma",
+        "phase": null,
+        "status": null,
+        "country": null
+      },
+      "got": {
+        "condition": "lymphoma",
+        "phase": null,
+        "status": null,
+        "country": null
+      },
+      "fields_correct": {
+        "condition": true,
+        "phase": true,
+        "status": true,
+        "country": true
+      },
+      "all_correct": true,
+      "seconds": 7.34,
+      "error": null,
+      "message": null,
+      "total_trials": 11297,
+      "validation": {
+        "ids_in_final_summary": 5,
+        "invented_ids_removed": [],
+        "detail_issues_flagged": [],
+        "trials_skipped": []
+      }
+    },
+    {
+      "id": 23,
+      "category": "ambiguous",
+      "question": "Prostate cancer trials in Germany or France",
+      "expected": {
+        "condition": "prostate cancer",
+        "phase": null,
+        "status": null,
+        "country": null
+      },
+      "got": {
+        "condition": "prostate cancer",
+        "phase": null,
+        "status": null,
+        "country": null
+      },
+      "fields_correct": {
+        "condition": true,
+        "phase": true,
+        "status": true,
+        "country": true
+      },
+      "all_correct": true,
+      "seconds": 6.28,
+      "error": null,
+      "message": null,
+      "total_trials": 7605,
+      "validation": {
+        "ids_in_final_summary": 5,
+        "invented_ids_removed": [],
+        "detail_issues_flagged": [],
+        "trials_skipped": []
+      }
+    },
+    {
+      "id": 24,
+      "category": "ambiguous",
+      "question": "Cutting-edge new treatments for lupus",
+      "expected": {
+        "condition": "lupus",
+        "phase": null,
+        "status": null,
+        "country": null
+      },
+      "got": {
+        "condition": "lupus",
+        "phase": null,
+        "status": null,
+        "country": null
+      },
+      "fields_correct": {
+        "condition": true,
+        "phase": true,
+        "status": true,
+        "country": true
+      },
+      "all_correct": true,
+      "seconds": 6.18,
+      "error": null,
+      "message": null,
+      "total_trials": 1667,
+      "validation": {
+        "ids_in_final_summary": 5,
+        "invented_ids_removed": [],
+        "detail_issues_flagged": [],
+        "trials_skipped": []
+      }
+    },
+    {
+      "id": 25,
+      "category": "ambiguous",
+      "question": "Early phase 1 trials in Brazil",
+      "expected": {
+        "condition": null,
+        "phase": "EARLY_PHASE1",
+        "status": null,
+        "country": "Brazil"
+      },
+      "got": {
+        "condition": null,
+        "phase": "EARLY_PHASE1",
+        "status": null,
+        "country": "Brazil"
+      },
+      "fields_correct": {
+        "condition": true,
+        "phase": true,
+        "status": true,
+        "country": true
+      },
+      "all_correct": true,
+      "seconds": 3.57,
+      "error": null,
+      "message": null,
+      "total_trials": 46,
+      "validation": {
+        "ids_in_final_summary": 5,
+        "invented_ids_removed": [],
+        "detail_issues_flagged": [],
+        "trials_skipped": []
+      }
+    },
+    {
+      "id": 26,
+      "category": "typo",
+      "question": "recruting diabetis trials in mexico",
+      "expected": {
+        "condition": "diabetes",
+        "phase": null,
+        "status": "RECRUITING",
+        "country": "Mexico"
+      },
+      "got": {
+        "condition": "diabetis",
+        "phase": null,
+        "status": "RECRUITING",
+        "country": "Mexico"
+      },
+      "fields_correct": {
+        "condition": false,
+        "phase": true,
+        "status": true,
+        "country": true
+      },
+      "all_correct": false,
+      "seconds": 1.87,
+      "error": null,
+      "message": "No trials on ClinicalTrials.gov match these filters. Try removing one.",
+      "total_trials": 0
+    },
+    {
+      "id": 27,
+      "category": "typo",
+      "question": "phase 3 alzhiemers trails",
+      "expected": {
+        "condition": [
+          "alzheimer's",
+          "alzheimers",
+          "alzheimer"
+        ],
+        "phase": "PHASE3",
+        "status": null,
+        "country": null
+      },
+      "got": {
+        "condition": "alzhiemers",
+        "phase": "PHASE3",
+        "status": null,
+        "country": null
+      },
+      "fields_correct": {
+        "condition": false,
+        "phase": true,
+        "status": true,
+        "country": true
+      },
+      "all_correct": false,
+      "seconds": 1.79,
+      "error": null,
+      "message": "No trials on ClinicalTrials.gov match these filters. Try removing one.",
+      "total_trials": 0
+    },
+    {
+      "id": 28,
+      "category": "off-topic",
+      "question": "How do I bake sourdough bread?",
+      "expected": {
+        "condition": null,
+        "phase": null,
+        "status": null,
+        "country": null
+      },
+      "got": {
+        "condition": null,
+        "phase": null,
+        "status": null,
+        "country": null
+      },
+      "fields_correct": {
+        "condition": true,
+        "phase": true,
+        "status": true,
+        "country": true
+      },
+      "all_correct": true,
+      "seconds": 1.02,
+      "error": null,
+      "message": "This doesn't look like a clinical trial question. Try naming a condition, e.g. 'Phase 3 diabetes trials recruiting in India'.",
+      "total_trials": 0
+    },
+    {
+      "id": 29,
+      "category": "off-topic",
+      "question": "Who won the 2022 football World Cup?",
+      "expected": {
+        "condition": null,
+        "phase": null,
+        "status": null,
+        "country": null
+      },
+      "got": {
+        "condition": null,
+        "phase": null,
+        "status": null,
+        "country": null
+      },
+      "fields_correct": {
+        "condition": true,
+        "phase": true,
+        "status": true,
+        "country": true
+      },
+      "all_correct": true,
+      "seconds": 1.19,
+      "error": null,
+      "message": "This doesn't look like a clinical trial question. Try naming a condition, e.g. 'Phase 3 diabetes trials recruiting in India'.",
+      "total_trials": 0
+    },
+    {
+      "id": 30,
+      "category": "no-results",
+      "question": "Phase 4 trials for zebra-stripe syndrome in Iceland",
+      "expected": {
+        "condition": "zebra-stripe syndrome",
+        "phase": "PHASE4",
+        "status": null,
+        "country": "Iceland"
+      },
+      "got": {
+        "condition": "zebra-stripe syndrome",
+        "phase": "PHASE4",
+        "status": null,
+        "country": "Iceland"
+      },
+      "fields_correct": {
+        "condition": true,
+        "phase": true,
+        "status": true,
+        "country": true
+      },
+      "all_correct": true,
+      "seconds": 2.09,
+      "error": null,
+      "message": "No trials on ClinicalTrials.gov match these filters. Try removing one.",
+      "total_trials": 0
+    }
+  ]
+}

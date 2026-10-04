@@ -234,3 +234,47 @@ A: The code has one function, `get_api_key()`. It checks environment variables f
 
 **Q: Why not put the logic straight into `app.py`?**
 A: Separation of concerns. The UI only displays a `PipelineResult`. The pipeline is plain Python I can run from the terminal and test without a browser. If I changed the UI framework, the pipeline wouldn't change at all.
+
+---
+
+## Phase 6 – Evaluation and README
+
+### What was built
+| File | Purpose |
+|---|---|
+| `tests/test_questions.json` | 30 new questions (not the 15 the prompt was tuned on) in 8 categories, each with expected filters. A free-text answer can list several acceptable values (e.g. `["CKD", "chronic kidney disease"]`). |
+| `tests/evaluate.py` | Runs every question through the **full** pipeline, scores the filters, collects validation counts and timings, prints a report, and saves everything to `tests/eval_results.json`. |
+| `README.md` | Overview, Mermaid architecture diagram, how validation works, measured results, setup, limitations. |
+
+### Metrics and how they are measured
+- **Filter extraction accuracy**: a question counts as correct only if *all 4* fields are right. Phase and status must match exactly. Condition and country pass on a case-insensitive "one contains the other" match, so "Alzheimer" and "Alzheimer's" both count. Per-field and per-category scores show *where* errors happen.
+- **Hallucinations caught**: invented IDs removed plus wrong details flagged, taken from each `ValidationResult`. Omissions are counted separately, because a skipped trial is not a made-up one.
+- **Response time**: wall-clock time for `run_pipeline()` per question, reported as mean, median and max. The pause between questions that keeps us under the free tier's 15 requests per minute is *not* counted.
+
+### Results (2026-10-04, gemini-3.5-flash-lite)
+| | Run 1 | Run 2 |
+|---|---|---|
+| All 4 fields correct | 28/30 | 30/30 |
+| Hallucinations caught | 0 | 0 |
+| NCT IDs verified | 121 | 131 |
+| Mean response time | 4.74 s | 5.59 s |
+
+- **Run 1 found a real bug**: typos ("diabetis") were kept, and the search returned 0 trials. "diabetis" finds 7 studies in the whole registry, against 24,469 for "diabetes".
+- **The fix** makes the prompt always correct spelling. Its examples use different words than the test set ("asthama", "cancr").
+- **Run 2 scored 30/30**, but because the fix came from this test set, run 2 is somewhat optimistic. Both runs are kept and reported.
+
+### Concepts
+- **Evaluation set vs tuning set**: if you tune a prompt on the same questions you score it on, the score goes up without proving the prompt generalises. That is why the 30 questions are new, why the typo fix uses different example words, and why the README says run 2 is optimistic.
+- **Report the honest number**: "0 hallucinations caught" is not a failure of the validator. It means grounding worked on these 30 questions. The planted-error tests prove the validator would catch problems.
+- **Keep raw results**: every README number comes from a saved JSON file with a timestamp, so anyone can check it.
+- **Mermaid**: a text format for diagrams that GitHub renders automatically, so the architecture diagram lives in version control next to the code.
+
+### Likely interview questions
+**Q: How did you evaluate the system?**
+A: With 30 hand-labelled questions across 8 categories, including tricky ones: typos, abbreviations, city to country, two phases, and off-topic. A script runs each one through the live pipeline. It reports exact-match filter accuracy, per-field accuracy, hallucinations caught by the validator, and response time. The first run scored 28/30, and both misses were typos that made the search return nothing. After a prompt fix it scored 30/30. I report both, because the fix was informed by the test set.
+
+**Q: Your validator caught 0 hallucinations. Is it useless?**
+A: No. Zero means the grounded prompt worked on these questions: all 131 IDs and their details were correct. But models change and inputs vary, so the validator is a safety net, like a unit test that usually passes. I proved it works with planted-error tests: invented IDs, wrong phase, status and sponsor, and skipped trials are all caught.
+
+**Q: What would you improve next?**
+A: A larger, unseen test set to get a fair score after tuning. Support for several phases or countries per search (the API supports `OR` in the advanced filter). Showing the city-level locations that matched the user's country. And caching across users, to stretch the free-tier quota on the deployed app.

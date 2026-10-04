@@ -118,10 +118,11 @@ ClinicalTrials.gov database. Reply with JSON only.
 
 Fields:
 - condition: the disease or health condition, using the user's own term
-  (e.g. "type 2 diabetes", "HIV", "NSCLC"). Fix obvious typos, but do not
-  expand abbreviations or add words: the database already matches synonyms,
-  and longer phrases find fewer trials. Do not include phase, status or place
-  words here.
+  (e.g. "type 2 diabetes", "HIV", "NSCLC"). Always correct spelling mistakes,
+  because a misspelled condition finds no trials (e.g. "asthama" -> "asthma",
+  "brest cancr" -> "breast cancer"). Do not expand abbreviations or add words:
+  the database already matches synonyms, and longer phrases find fewer trials.
+  Do not include phase, status or place words here.
 - phase: one of EARLY_PHASE1, PHASE1, PHASE2, PHASE3, PHASE4.
   Roman numerals count ("Phase III" -> PHASE3).
 - status: one of RECRUITING, NOT_YET_RECRUITING, ACTIVE_NOT_RECRUITING,
