@@ -33,6 +33,7 @@ from src.config import (
 )
 from src.dataset.columns import COLUMNS
 from src.dataset.features import (
+    DROPPED_AFTER_REVIEW,
     EXCLUDED_COLUMNS,
     FEATURES,
     MANUAL_REVIEW_NOTES,
@@ -41,6 +42,7 @@ from src.dataset.features import (
     Feature,
     feature_names,
     select_rows,
+    yes_no_missing,
 )
 from src.dataset.filters import (
     LATE_REGISTRATION_REASON,
@@ -270,6 +272,23 @@ def measured_leaks(trials: pd.DataFrame, table: pd.DataFrame) -> list[dict]:
             for name, compute in MEASURED_LEAKS.items()]
 
 
+def dropped_after_review(trials: pd.DataFrame, table: pd.DataFrame) -> list[dict]:
+    """Missing share per split and train->val drift for columns dropped after the audit review."""
+    split_of = dict(zip(table["nct_id"], table["split"]))
+    splits = trials["nct_id"].astype(str).map(split_of)  # NaN for dropped late registrations
+    result = []
+    for column in DROPPED_AFTER_REVIEW:
+        values = yes_no_missing(trials[column])
+        missing_pct = {part: pct(int((values[splits == part] == MISSING).sum()), int((splits == part).sum()))
+                       for part in SPLIT_YEARS}
+        result.append({
+            "column": column,
+            "missing_pct_by_split": missing_pct,
+            "drift_train_vs_val": drift(values[splits == "train"], values[splits == "val"], "category"),
+        })
+    return result
+
+
 # --- the whole audit --------------------------------------------------------------------
 
 def build_audit(trials: pd.DataFrame, table: pd.DataFrame, censoring_counts: dict) -> dict:
@@ -292,6 +311,7 @@ def build_audit(trials: pd.DataFrame, table: pd.DataFrame, censoring_counts: dic
         "excluded_columns": [{"column": c, "known_at_start": known[c], "reason": r}
                              for c, r in EXCLUDED_COLUMNS.items()],
         "measured_leaks": measured_leaks(trials, table),
+        "dropped_after_review": dropped_after_review(trials, table),
     }
 
 
@@ -429,6 +449,18 @@ def audit_markdown(a: dict) -> str:
         "| Column | AUC |",
         "|---|---|",
         *[f"| {m['column']} | {m['auc_train']} |" for m in a["measured_leaks"]],
+        "",
+        "## 8. Dropped after audit review",
+        "",
+        "These were features until the drift check flagged them. Decision (Phase 8 review): drop them. "
+        "Each field became required for new registrations in 2017, so the training years (2010–2016) "
+        "mostly contain MISSING while live trials always have a value: a train/serve mismatch.",
+        "",
+        "| Column | MISSING % train | MISSING % val | MISSING % test | MISSING % recent | Drift train→val |",
+        "|---|---|---|---|---|---|",
+        *[f"| `{d['column']}` | {d['missing_pct_by_split']['train']}% | {d['missing_pct_by_split']['val']}% | "
+          f"{d['missing_pct_by_split']['test']}% | {d['missing_pct_by_split']['recent']}% | "
+          f"{d['drift_train_vs_val']} |" for d in a["dropped_after_review"]],
     ]
     return "\n".join(lines) + "\n"
 

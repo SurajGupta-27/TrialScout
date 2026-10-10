@@ -12,6 +12,7 @@ from src.dataset.audit import drift, single_feature_auc
 from src.dataset.build import build_rows, to_dataframe
 from src.dataset.columns import COLUMN_NAMES, COLUMNS
 from src.dataset.features import (
+    DROPPED_AFTER_REVIEW,
     EXCLUDED_COLUMNS,
     FEATURE_NAMES,
     FEATURES,
@@ -60,6 +61,9 @@ def test_no_leakage_column_is_a_feature() -> None:
         allowed = {"yes"} if f.group == "strict" else {"yes", "caution"}
         assert {known[s] for s in f.sources} <= allowed, (f.name, f.sources)
     assert known["enrollment_count"] == "no"  # reclassified in Phase 8
+    sources = {s for f in FEATURES for s in f.sources}
+    assert not sources & set(DROPPED_AFTER_REVIEW)  # FDA fields: dropped after the drift review
+    assert set(DROPPED_AFTER_REVIEW) <= set(EXCLUDED_COLUMNS)
     assert not set(ID_COLUMNS) & set(FEATURE_NAMES)
     assert len(FEATURE_NAMES) == len(set(FEATURE_NAMES))
     assert set(feature_names(("strict", "caution"))) == set(FEATURE_NAMES)

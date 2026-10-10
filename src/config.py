@@ -95,6 +95,47 @@ AUDIT_AUC_REVIEW_THRESHOLD = 0.65
 AUDIT_DRIFT_REVIEW_THRESHOLD = 0.25
 
 FEATURES_PATH = PROCESSED_DIR / "features.parquet"
+
+# --- Phase 9: model training and evaluation ----------------------------------
+PROJECT_DIR = DATA_DIR.parent
+RANDOM_SEED = 42
+
+# Small grids, every setting scored on the 2017 validation set (never on test).
+PARAM_GRIDS = {
+    "dummy": {},  # always predicts "completed": the baseline every model must beat
+    "logreg": {"C": [0.01, 0.1, 1.0], "class_weight": [None, "balanced"]},
+    "random_forest": {"max_depth": [12, 20], "min_samples_leaf": [10, 50],
+                      "class_weight": [None, "balanced_subsample"]},
+    "lightgbm": {"num_leaves": [15, 31, 63], "min_child_samples": [50, 200], "n_estimators": [300, 800]},
+}
+RF_N_TREES = 300
+LGBM_LEARNING_RATE = 0.05
+
+# Compared on validation: feature groups and dataset versions (see src/dataset/features.py).
+FEATURE_SETS = {"strict": ("strict",), "strict+caution": ("strict", "caution")}
+DATA_VERSIONS = ("main", "with_covid")
+
+CALIBRATION_FOLDS = 5  # calibrators are compared by cross-validated Brier score within validation
+CALIBRATION_BINS = 10  # bins in the reliability table (equal number of trials per bin)
+PERMUTATION_REPEATS = 5
+
+# Risk bands from the calibrated probability p and the validation base rate b:
+# Low: p < 1*b, Medium: 1*b <= p < 2*b, High: p >= 2*b.
+RISK_BAND_MULTIPLIERS = (1.0, 2.0)
+# If one band holds more than this share of validation trials, training stops before saving
+# the model, so the bands can be discussed first.
+BAND_MAX_SHARE_PCT = 80.0
+
+MODELS_DIR = PROJECT_DIR / "models"
+MODEL_PATH = MODELS_DIR / "trial_risk_model.joblib"
+MODEL_METADATA_PATH = MODELS_DIR / "model_metadata.json"
+MODEL_MAX_SIZE_MB = 25.0  # small enough for GitHub and free hosting
+REPORTS_DIR = PROJECT_DIR / "reports"
+VALIDATION_REPORT_JSON = REPORTS_DIR / "model_validation.json"
+VALIDATION_REPORT_MD = REPORTS_DIR / "model_validation.md"
+FINAL_TEST_REPORT_JSON = REPORTS_DIR / "model_final_test.json"
+FINAL_TEST_REPORT_MD = REPORTS_DIR / "model_final_test.md"
+MODEL_CARD_PATH = PROJECT_DIR / "MODEL_CARD.md"
 # Live API counts of still-running trials per start year (for the censoring check).
 CENSORING_COUNTS_PATH = DATA_DIR / "censoring_counts.json"
 

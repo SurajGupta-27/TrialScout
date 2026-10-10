@@ -61,8 +61,6 @@ CATEGORIES = {
 # True/False/missing fields: "yes", "no" or "MISSING" (missing is common in older records).
 YES_NO = {
     "has_dmc": "Has a data monitoring committee",
-    "is_fda_regulated_drug": "Studies an FDA-regulated drug",
-    "is_fda_regulated_device": "Studies an FDA-regulated device",
     "healthy_volunteers": "Accepts healthy volunteers",
 }
 NUMBERS = {
@@ -162,16 +160,21 @@ EXCLUDED_COLUMNS = {
                          "`lead_sponsor_class` is used instead.",
     "conditions": "Free text as written by the sponsor (thousands of values). Grouped into MeSH disease "
                   "areas instead.",
+    "is_fda_regulated_drug": "DROPPED AFTER AUDIT REVIEW (decided in Phase 8): the field became required for "
+                             "new registrations in 2017, so it is mostly MISSING in the training years "
+                             "(2010-2016) and almost never MISSING afterwards. The model would learn from "
+                             "'MISSING', a value live trials never have (train/serve mismatch). "
+                             "See section 8 for the measured drift.",
+    "is_fda_regulated_device": "DROPPED AFTER AUDIT REVIEW (decided in Phase 8): same 2017 rule change and "
+                               "train/serve mismatch as is_fda_regulated_drug. See section 8.",
 }
 
+# Columns that were features until the audit's drift check flagged them; section 8 of the
+# audit keeps measuring them so the reason stays visible.
+DROPPED_AFTER_REVIEW = ("is_fda_regulated_drug", "is_fda_regulated_device")
+
 # Results of the manual check of features flagged by the audit (written after reading the audit).
-_FDA_NOTE = ("Field became required for new registrations in 2017 (FDAAA Final Rule): MISSING in 74-95% "
-             "of 2010-2016 trials, under 5% from 2017. The training years mostly teach 'MISSING', a value "
-             "live trials never have. Decision for Phase 9 pending (see LEARNING.md, Phase 8).")
-MANUAL_REVIEW_NOTES: dict[str, str] = {
-    "is_fda_regulated_drug": _FDA_NOTE,
-    "is_fda_regulated_device": _FDA_NOTE,
-}
+MANUAL_REVIEW_NOTES: dict[str, str] = {}
 
 
 def feature_names(groups: tuple[str, ...] = ("strict",)) -> list[str]:

@@ -1,0 +1,294 @@
+{
+  "created_at": "2026-10-10T20:21:04",
+  "model": "lightgbm",
+  "params": {
+    "min_child_samples": 200,
+    "n_estimators": 300,
+    "num_leaves": 31
+  },
+  "data_version": "main",
+  "feature_set": "strict+caution",
+  "features": [
+    {
+      "name": "phase",
+      "group": "strict"
+    },
+    {
+      "name": "primary_purpose",
+      "group": "strict"
+    },
+    {
+      "name": "allocation",
+      "group": "strict"
+    },
+    {
+      "name": "intervention_model",
+      "group": "strict"
+    },
+    {
+      "name": "masking",
+      "group": "strict"
+    },
+    {
+      "name": "lead_sponsor_class",
+      "group": "strict"
+    },
+    {
+      "name": "responsible_party_type",
+      "group": "strict"
+    },
+    {
+      "name": "sex",
+      "group": "strict"
+    },
+    {
+      "name": "has_dmc",
+      "group": "strict"
+    },
+    {
+      "name": "healthy_volunteers",
+      "group": "strict"
+    },
+    {
+      "name": "n_arms",
+      "group": "strict"
+    },
+    {
+      "name": "n_interventions",
+      "group": "strict"
+    },
+    {
+      "name": "n_conditions",
+      "group": "strict"
+    },
+    {
+      "name": "n_keywords",
+      "group": "strict"
+    },
+    {
+      "name": "min_age_years",
+      "group": "strict"
+    },
+    {
+      "name": "max_age_years",
+      "group": "strict"
+    },
+    {
+      "name": "no_max_age",
+      "group": "strict"
+    },
+    {
+      "name": "itype_drug",
+      "group": "strict"
+    },
+    {
+      "name": "itype_biological",
+      "group": "strict"
+    },
+    {
+      "name": "itype_device",
+      "group": "strict"
+    },
+    {
+      "name": "itype_procedure",
+      "group": "strict"
+    },
+    {
+      "name": "itype_radiation",
+      "group": "strict"
+    },
+    {
+      "name": "itype_behavioral",
+      "group": "strict"
+    },
+    {
+      "name": "itype_genetic",
+      "group": "strict"
+    },
+    {
+      "name": "itype_dietary_supplement",
+      "group": "strict"
+    },
+    {
+      "name": "itype_combination_product",
+      "group": "strict"
+    },
+    {
+      "name": "itype_diagnostic_test",
+      "group": "strict"
+    },
+    {
+      "name": "itype_other",
+      "group": "strict"
+    },
+    {
+      "name": "age_child",
+      "group": "strict"
+    },
+    {
+      "name": "age_adult",
+      "group": "strict"
+    },
+    {
+      "name": "age_older_adult",
+      "group": "strict"
+    },
+    {
+      "name": "area_cancer",
+      "group": "strict"
+    },
+    {
+      "name": "area_cardiovascular",
+      "group": "strict"
+    },
+    {
+      "name": "area_nervous_system",
+      "group": "strict"
+    },
+    {
+      "name": "area_mental",
+      "group": "strict"
+    },
+    {
+      "name": "area_infections",
+      "group": "strict"
+    },
+    {
+      "name": "area_respiratory",
+      "group": "strict"
+    },
+    {
+      "name": "area_digestive",
+      "group": "strict"
+    },
+    {
+      "name": "area_nutrition_metabolic",
+      "group": "strict"
+    },
+    {
+      "name": "area_endocrine",
+      "group": "strict"
+    },
+    {
+      "name": "area_urogenital_pregnancy",
+      "group": "strict"
+    },
+    {
+      "name": "area_immune",
+      "group": "strict"
+    },
+    {
+      "name": "area_skin_connective",
+      "group": "strict"
+    },
+    {
+      "name": "area_musculoskeletal",
+      "group": "strict"
+    },
+    {
+      "name": "area_blood_lymph",
+      "group": "strict"
+    },
+    {
+      "name": "area_eye",
+      "group": "strict"
+    },
+    {
+      "name": "area_injuries",
+      "group": "strict"
+    },
+    {
+      "name": "area_congenital",
+      "group": "strict"
+    },
+    {
+      "name": "area_signs_symptoms",
+      "group": "strict"
+    },
+    {
+      "name": "area_unknown",
+      "group": "strict"
+    },
+    {
+      "name": "n_locations",
+      "group": "caution"
+    },
+    {
+      "name": "n_countries",
+      "group": "caution"
+    },
+    {
+      "name": "n_collaborators",
+      "group": "caution"
+    },
+    {
+      "name": "n_primary_outcomes",
+      "group": "caution"
+    },
+    {
+      "name": "n_secondary_outcomes",
+      "group": "caution"
+    },
+    {
+      "name": "eligibility_criteria_chars",
+      "group": "caution"
+    },
+    {
+      "name": "has_us_site",
+      "group": "caution"
+    },
+    {
+      "name": "multi_country",
+      "group": "caution"
+    }
+  ],
+  "trained_on_start_years": [
+    2010,
+    2016
+  ],
+  "tuned_on_start_years": [
+    2017,
+    2017
+  ],
+  "train_rows": 77902,
+  "calibration_method": "sigmoid",
+  "f1_threshold": 0.1575,
+  "risk_bands": {
+    "cutoffs": {
+      "low_max": 0.1207,
+      "high_min": 0.2415
+    },
+    "multipliers_of_base_rate": [
+      1.0,
+      2.0
+    ],
+    "validation_base_rate": 0.1207
+  },
+  "validation_scores": {
+    "roc_auc": 0.73,
+    "pr_auc": 0.26,
+    "brier": 0.0982,
+    "base_rate": 0.1207,
+    "at_threshold": {
+      "threshold": 0.1575,
+      "precision": 0.2447,
+      "recall": 0.5746,
+      "f1": 0.3433,
+      "accuracy": 0.7345,
+      "confusion_matrix": {
+        "tn": 8819,
+        "fp": 2839,
+        "fn": 681,
+        "tp": 920
+      }
+    }
+  },
+  "file": "trial_risk_model.joblib",
+  "size_mb": 0.44,
+  "sha256": "d279819e5589ea9c198906f6ddfd28477c321b28f66f34f48f8c5298bed11286",
+  "library_versions": {
+    "scikit-learn": "1.9.1",
+    "lightgbm": "4.7.0"
+  },
+  "disclaimer": "Research and portfolio tool. The risk score describes patterns in past registry data; it is not medical, legal or investment advice and does not judge any specific trial."
+}

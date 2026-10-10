@@ -48,6 +48,9 @@ python -m src.dataset.download                              # download/resume tr
 python -m src.dataset.build                                 # build trials.parquet + reports (~1 min)
 python -m src.dataset.features                              # features.parquet + data/LEAKAGE_AUDIT.md (~1 min)
 python -m tests.test_features                               # feature/split/audit tests, offline
+python -m tests.test_model                                  # model/calibration/band tests, offline
+python -m src.model.train                                   # tune on 2017, save model + reports (~30 min)
+python -m src.model.final_test --approved                   # ONE-TIME 2018 test; only after the model is approved
 ```
 `tests.evaluate` overwrites `tests/eval_results.json` (the source of README numbers);
 back it up first if you only want a check run.

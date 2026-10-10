@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-10T20:03:46",
+  "generated_at": "2026-10-10T20:07:21",
   "auc_review_threshold": 0.65,
   "drift_review_threshold": 0.25,
   "split_years": {
@@ -379,48 +379,6 @@
       "review_reasons": [],
       "needs_review": false,
       "review_note": ""
-    },
-    {
-      "feature": "is_fda_regulated_drug",
-      "group": "strict",
-      "kind": "category",
-      "sources": [
-        "is_fda_regulated_drug"
-      ],
-      "sources_known_at_start": [
-        "yes"
-      ],
-      "meaning": "Studies an FDA-regulated drug: yes / no / MISSING",
-      "auc_train": 0.526,
-      "missing_pct_completed": 87.5,
-      "missing_pct_terminated": 85.4,
-      "drift_train_vs_val": 0.831,
-      "review_reasons": [
-        "high drift"
-      ],
-      "needs_review": true,
-      "review_note": "Field became required for new registrations in 2017 (FDAAA Final Rule): MISSING in 74-95% of 2010-2016 trials, under 5% from 2017. The training years mostly teach 'MISSING', a value live trials never have. Decision for Phase 9 pending (see LEARNING.md, Phase 8)."
-    },
-    {
-      "feature": "is_fda_regulated_device",
-      "group": "strict",
-      "kind": "category",
-      "sources": [
-        "is_fda_regulated_device"
-      ],
-      "sources_known_at_start": [
-        "yes"
-      ],
-      "meaning": "Studies an FDA-regulated device: yes / no / MISSING",
-      "auc_train": 0.51,
-      "missing_pct_completed": 87.5,
-      "missing_pct_terminated": 85.5,
-      "drift_train_vs_val": 0.831,
-      "review_reasons": [
-        "high drift"
-      ],
-      "needs_review": true,
-      "review_note": "Field became required for new registrations in 2017 (FDAAA Final Rule): MISSING in 74-95% of 2010-2016 trials, under 5% from 2017. The training years mostly teach 'MISSING', a value live trials never have. Decision for Phase 9 pending (see LEARNING.md, Phase 8)."
     },
     {
       "feature": "healthy_volunteers",
@@ -1478,6 +1436,16 @@
       "column": "conditions",
       "known_at_start": "yes",
       "reason": "Free text as written by the sponsor (thousands of values). Grouped into MeSH disease areas instead."
+    },
+    {
+      "column": "is_fda_regulated_drug",
+      "known_at_start": "yes",
+      "reason": "DROPPED AFTER AUDIT REVIEW (decided in Phase 8): the field became required for new registrations in 2017, so it is mostly MISSING in the training years (2010-2016) and almost never MISSING afterwards. The model would learn from 'MISSING', a value live trials never have (train/serve mismatch). See section 8 for the measured drift."
+    },
+    {
+      "column": "is_fda_regulated_device",
+      "known_at_start": "yes",
+      "reason": "DROPPED AFTER AUDIT REVIEW (decided in Phase 8): same 2017 rule change and train/serve mismatch as is_fda_regulated_drug. See section 8."
     }
   ],
   "measured_leaks": [
@@ -1492,6 +1460,28 @@
     {
       "column": "has_results",
       "auc_train": 0.545
+    }
+  ],
+  "dropped_after_review": [
+    {
+      "column": "is_fda_regulated_drug",
+      "missing_pct_by_split": {
+        "train": 87.2,
+        "val": 4.1,
+        "test": 0.1,
+        "recent": 0.1
+      },
+      "drift_train_vs_val": 0.831
+    },
+    {
+      "column": "is_fda_regulated_device",
+      "missing_pct_by_split": {
+        "train": 87.2,
+        "val": 4.1,
+        "test": 0.1,
+        "recent": 0.1
+      },
+      "drift_train_vs_val": 0.831
     }
   ]
 }

@@ -346,7 +346,7 @@ A: Leakage is when a feature contains information you wouldn't have at predictio
 | `src/dataset/audit.py` | Generates `data/LEAKAGE_AUDIT.md/.json`: rows removed, split balance, censoring check, and per-feature checks. |
 | `tests/test_features.py` | 11 offline tests: no column forgotten, no leakage column used, filters, feature values, split years, test-set lock, AUC and drift checks. |
 
-`python -m src.dataset.features` writes `data/processed/features.parquet` (130,253 rows, 60 features: 52 strict + 8 caution) and the audit.
+`python -m src.dataset.features` writes `data/processed/features.parquet` (130,253 rows, 58 features: 50 strict + 8 caution) and the audit.
 
 ### Concepts
 - **Kinds of leakage found in this data:**
@@ -373,7 +373,7 @@ A: Leakage is when a feature contains information you wouldn't have at predictio
 - 155,288 → 130,253 trials after dropping 25,035 late registrations.
 - Main version: train 77,902 (12.3% terminated), validation 13,259 (12.1%), test 13,299 (11.7%), recent 24,508 (11.6%).
 - No feature reaches single-feature AUC 0.65 (highest: `eligibility_criteria_chars` 0.584, `phase` 0.578).
-- **Open issue:** `is_fda_regulated_drug/device` drift 0.831. They are MISSING in 74–95% of 2010–2016 trials and in under 5% from 2017, when the fields became required. The training years mostly teach "MISSING", a value live trials never have. Whether to drop them is a Phase 9 decision.
+- **Dropped after review:** `is_fda_regulated_drug/device` drift 0.831 between train and validation. They are MISSING in 87.2% of training rows and 0.1% of test rows, because the fields became required for new registrations in 2017. The model would learn from "MISSING", a value live trials never have (train/serve mismatch), so both were moved to the excluded columns. Section 8 of the audit keeps measuring them.
 
 ### Likely interview questions
 **Q: How did you make sure your model only uses information available at trial start?**
@@ -384,3 +384,48 @@ A: In real use the model is trained on the past and used on trials starting late
 
 **Q: What was the most surprising data problem?**
 A: 16% of "finished" trials were registered only after they had ended, and 98% of those were completed: sponsors register finished trials so they can publish them. Kept in, the model would learn "late registration means success", which is useless for a new trial. Another: the drift check found that two FDA fields became required in 2017, so they are almost always missing in my training years and almost never missing afterwards.
+
+---
+
+## Phase 9 – Training and evaluation
+
+*Status: model trained, tuned and saved; the one-time 2018 test is waiting for approval of the chosen model.*
+
+### What was built
+| File | Job |
+|---|---|
+| `src/model/pipeline.py` | One scikit-learn `Pipeline` per model: one-hot categories, median fill + `log1p` + scaling for counts, flags as 0/1, then the model. |
+| `src/model/metrics.py` | PR-AUC, ROC-AUC, Brier, best-F1 threshold, confusion matrix, reliability table, risk bands. |
+| `src/model/calibration.py` | Sigmoid / isotonic calibrators, out-of-fold comparison, and `CalibratedModel` (the saved object). |
+| `src/model/train.py` | The grid on 2017 validation, model choice, calibration, bands, importance, saving, reports. |
+| `src/model/final_test.py` | The one-time 2018 test: needs `--approved`, refuses a second run, checks the model file's sha256. |
+| `src/model/predict.py` | `predict_risk()` → probability + Low/Medium/High, for Phase 10. |
+| `src/model/report.py`, `card.py` | Generate `reports/model_validation.md` and `MODEL_CARD.md` from the result files. |
+| `tests/test_model.py` | 10 offline tests on synthetic data. |
+
+### Concepts
+- **Dummy baseline**: always predicting "completed" scores 87.9% accuracy on 2017 but finds no terminated trial. That's why accuracy is useless here, and why every table shows the dummy.
+- **PR-AUC vs ROC-AUC**: ROC-AUC asks "is a random terminated trial ranked above a random completed one?" (0.5 = guessing). PR-AUC focuses on the rare class: a no-skill model scores the base rate (0.1207 here), so "0.26" means a bit more than twice the baseline.
+- **Pipeline fitted on train only**: the encoder, medians and scaler learn only from 2010–2016, so validation and test rows can't leak into preprocessing.
+- **Calibration**: a model can rank well while its probabilities are off. Sigmoid (Platt) fits a 2-number logistic curve on the scores; isotonic fits a step function. I chose by 5-fold cross-validated Brier score *within* 2017, and all post-calibration validation numbers are out-of-fold, so no trial is scored by a calibrator fitted on it.
+- **Threshold choice**: precision/recall depend on a cut-off. I picked the best-F1 threshold on validation and freeze it for the test.
+- **Permutation importance**: shuffle one feature and measure how much validation PR-AUC drops. It works for any model and keeps one-hot pieces together.
+
+### Measured results (validation 2017, run of 2026-10-10, 5.8 min)
+- **Chosen: LightGBM** (300 trees, 31 leaves, min 200 samples per leaf), `main` data, strict+caution features, sigmoid calibration, **0.44 MB**.
+- Validation: **PR-AUC 0.26** (dummy 0.1207), **ROC-AUC 0.73**, Brier 0.0982 (dummy 0.1207). At the best-F1 threshold 0.1575: precision 0.245, recall 0.575, F1 0.343.
+- **Strict vs strict+caution**: best PR-AUC 0.230 vs 0.261. The caution features help, and three of them are among the five most important (`has_us_site`, `n_locations`, `eligibility_criteria_chars`).
+- **main vs with_covid** training data: no real difference (best 0.2611 vs 0.2595 on the same validation rows).
+- Random Forest strict+caution scored 0.2611, slightly above LightGBM's 0.2599, but its file was 27 MB, over the 25 MB budget. LightGBM is 60× smaller for the same score.
+- Calibration barely mattered (Brier: none 0.09825, sigmoid 0.09818, isotonic 0.09858): LightGBM's raw scores were already well calibrated.
+- **Risk bands** (base rate b = 0.1207): Low 59.8% of trials (5.9% actually terminated), Medium 29.4% (18.0%), High 10.7% (30.4%). High-band trials were terminated about 5× as often as Low-band ones.
+
+### Likely interview questions
+**Q: Your ROC-AUC is only 0.73. Is the model any good?**
+A: It's moderate, and I expected that: termination often depends on things not in the registry at the start (funding, slow recruitment, safety findings). In Phase 8 no single start-time feature went above AUC 0.584. What matters is the honest comparison: PR-AUC 0.26 against 0.12 for the dummy, and the High band being terminated 30% of the time against 6% for Low. That's useful for ranking or flagging, not for deciding about one trial. I say this plainly in the model card.
+
+**Q: How did you avoid overfitting to your test set?**
+A: All choices (model, settings, feature set, data version, calibration, threshold, bands) were made on the 2017 validation year only. The 2018 test is run once, by a separate script that needs an explicit `--approved` flag, refuses to run twice, and checks the model file's hash, so the reported test score belongs to exactly the saved model.
+
+**Q: Why LightGBM and not Random Forest?**
+A: On validation they were tied (PR-AUC 0.2599 vs 0.2611), but the Random Forest file was 27 MB and over my 25 MB free-hosting budget, while LightGBM was 0.44 MB and fit 3× faster. The size budget was set before training and enforced in the selection code.
