@@ -10,7 +10,6 @@ Outputs (small, committed to git):
 """
 
 import json
-import re
 from collections import Counter
 from datetime import datetime
 from pathlib import Path
@@ -19,23 +18,15 @@ import pandas as pd
 
 from src.config import DATA_DIR, DATASET_END_YEAR, DATASET_START_YEAR, LABELS
 from src.dataset.columns import COLUMNS
+from src.dataset.filters import (  # noqa: F401  (mentions_covid is also imported from here by tests)
+    LATE_REGISTRATION_REASON,
+    mentions_covid,
+    registered_after_primary_completion,
+)
 
 REPORT_JSON = DATA_DIR / "data_report.json"
 REPORT_MD = DATA_DIR / "data_report.md"
 DICTIONARY_MD = DATA_DIR / "DATA_DICTIONARY.md"
-
-# Words that mark a trial stopped because of COVID-19. Tuned on the real why_stopped texts:
-# "covid" but not "Covidien" (a device company); "pandemi" also catches "pandemia";
-# SARS-CoV-2 is written many ways ("SARSCov2", "SARS-CoV2").
-COVID_PATTERN = re.compile(r"covid(?!ien)|corona ?virus|sars[- ]?cov[- ]?2|pandemi", re.IGNORECASE)
-# Earlier pandemics that would otherwise match "pandemic" (e.g. trials started in 2010).
-NOT_COVID_PATTERN = re.compile(r"h1n1|swine", re.IGNORECASE)
-
-
-def mentions_covid(texts: pd.Series) -> pd.Series:
-    """True where a why_stopped text mentions COVID-19 (a keyword match, so approximate)."""
-    texts = texts.fillna("")
-    return texts.str.contains(COVID_PATTERN) & ~texts.str.contains(NOT_COVID_PATTERN)
 
 
 def pct(part: int, whole: int) -> float:
@@ -80,6 +71,7 @@ def build_report(df: pd.DataFrame, excluded: Counter, state: dict) -> dict:
     terminated = int(df["label"].sum())
     terminated_rows = df[df["label"] == 1]
     covid_mentions = int(mentions_covid(terminated_rows["why_stopped"]).sum())
+    late = registered_after_primary_completion(df)
 
     not_downloaded = {}
     if api_counts:
@@ -111,6 +103,13 @@ def build_report(df: pd.DataFrame, excluded: Counter, state: dict) -> dict:
         "start_date_type": {(k if isinstance(k, str) else "missing"): int(v)
                             for k, v in df["start_date_type"].value_counts(dropna=False).items()},
         "by_start_year": by_start_year(df),
+        "modelling_filter_late_registration": {
+            "reason": LATE_REGISTRATION_REASON,
+            "rows_dropped": int(late.sum()),
+            "terminated_among_dropped": int(df.loc[late, "label"].sum()),
+            "terminated_pct_among_dropped": pct(int(df.loc[late, "label"].sum()), int(late.sum())),
+            "rows_kept_for_modelling": int((~late).sum()),
+        },
         "missing_values": missing_values(df),
     }
 
@@ -162,6 +161,19 @@ def report_markdown(r: dict) -> str:
         lines.append(f"| {y['start_year']} | {y['rows']} | {y['terminated']} | {y['terminated_pct']}% | "
                      f"{y['why_stopped_mentions_covid']} |")
 
+    late = r["modelling_filter_late_registration"]
+    lines += [
+        "",
+        "## Modelling filter (Phase 8): late registrations",
+        "",
+        "`trials.parquet` keeps every trial. The Phase 8 feature table "
+        f"(`python -m src.dataset.features`) drops **{late['rows_dropped']}** trials "
+        f"({late['terminated_pct_among_dropped']}% of them terminated): {late['reason']}.",
+        "",
+        f"Rows kept for modelling: **{late['rows_kept_for_modelling']}**. "
+        "Details are in `data/LEAKAGE_AUDIT.md`.",
+    ]
+
     lines += ["", "## Start date type", "", "| Type | Rows |", "|---|---|"]
     for k, v in r["start_date_type"].items():
         lines.append(f"| {k} | {v} |")
@@ -194,12 +206,13 @@ def data_dictionary_markdown() -> str:
         "*when the trial begins*:",
         "- **yes**: decided when the trial is designed or registered.",
         "- **caution**: planned at start but often edited later. The registry keeps only the "
-        "latest version, so the value may reflect what happened (e.g. enrollment becomes the actual number).",
-        "- **no**: only known during or after the trial. **Leakage: never use as a feature.**",
+        "latest version, so the value may reflect what happened (e.g. sites added or removed during the trial).",
+        "- **no**: only known during or after the trial. **Leakage: never use as a feature.** "
+        "This includes `enrollment_count`, which holds the *actual* final number for ~98% of finished trials.",
         "- **label**: the target.",
         "",
         "Note: every value comes from the *current* registry record, not a copy from the start date. "
-        "Phase 8 audits this before choosing features.",
+        "Which columns become features, and why the others don't, is in `data/LEAKAGE_AUDIT.md` (Phase 8).",
         "",
         "| Column | Type | Known at start | Meaning | API source |",
         "|---|---|---|---|---|",

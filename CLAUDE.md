@@ -46,6 +46,8 @@ python -m tests.evaluate                                    # 30-question evalua
 python -m tests.test_dataset                                # dataset tests, offline
 python -m src.dataset.download                              # download/resume trials (~20 min, ~460 MB)
 python -m src.dataset.build                                 # build trials.parquet + reports (~1 min)
+python -m src.dataset.features                              # features.parquet + data/LEAKAGE_AUDIT.md (~1 min)
+python -m tests.test_features                               # feature/split/audit tests, offline
 ```
 `tests.evaluate` overwrites `tests/eval_results.json` (the source of README numbers);
 back it up first if you only want a check run.

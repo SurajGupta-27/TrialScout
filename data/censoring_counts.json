@@ -1,0 +1,68 @@
+{
+  "fetched_at": "2026-10-10T19:50:16",
+  "registry_snapshot": "2026-10-09T09:00:05",
+  "ongoing_statuses": [
+    "RECRUITING",
+    "NOT_YET_RECRUITING",
+    "ACTIVE_NOT_RECRUITING",
+    "ENROLLING_BY_INVITATION",
+    "SUSPENDED"
+  ],
+  "by_year": {
+    "2010": {
+      "all": 13420,
+      "ongoing": 118,
+      "unknown": 1397
+    },
+    "2011": {
+      "all": 14217,
+      "ongoing": 135,
+      "unknown": 1636
+    },
+    "2012": {
+      "all": 15027,
+      "ongoing": 196,
+      "unknown": 1814
+    },
+    "2013": {
+      "all": 15896,
+      "ongoing": 241,
+      "unknown": 2106
+    },
+    "2014": {
+      "all": 17600,
+      "ongoing": 374,
+      "unknown": 2540
+    },
+    "2015": {
+      "all": 18947,
+      "ongoing": 479,
+      "unknown": 3005
+    },
+    "2016": {
+      "all": 20370,
+      "ongoing": 638,
+      "unknown": 3752
+    },
+    "2017": {
+      "all": 21265,
+      "ongoing": 944,
+      "unknown": 3856
+    },
+    "2018": {
+      "all": 22870,
+      "ongoing": 1315,
+      "unknown": 4582
+    },
+    "2019": {
+      "all": 23827,
+      "ongoing": 1895,
+      "unknown": 5250
+    },
+    "2020": {
+      "all": 23596,
+      "ongoing": 2384,
+      "unknown": 5738
+    }
+  }
+}

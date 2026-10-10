@@ -333,3 +333,54 @@ A: A withdrawn trial never enrolled anyone. That's a different question ("will t
 
 **Q: What is data leakage and how did you guard against it at this stage?**
 A: Leakage is when a feature contains information you wouldn't have at prediction time, so the model looks great in testing and fails in real use. For example, `why_stopped` is filled almost only for terminated trials, so it nearly *is* the label. Every column in my data dictionary is marked yes, caution or no for "known at trial start". "Caution" covers fields like enrollment, which is planned at the start but overwritten with the actual number at the end. Phase 8 audits these before any feature is used.
+
+---
+
+## Phase 8 – Features, leakage audit, time-based split
+
+### What was built
+| File | Job |
+|---|---|
+| `src/dataset/filters.py` | Row checks: late registration, COVID-terminated flag. These read "after the fact" columns only to drop or flag rows. |
+| `src/dataset/features.py` | The feature list (one `Feature` per column, grouped strict / caution), the reason for every excluded column, the feature computation, the split, and `load_features()`. |
+| `src/dataset/audit.py` | Generates `data/LEAKAGE_AUDIT.md/.json`: rows removed, split balance, censoring check, and per-feature checks. |
+| `tests/test_features.py` | 11 offline tests: no column forgotten, no leakage column used, filters, feature values, split years, test-set lock, AUC and drift checks. |
+
+`python -m src.dataset.features` writes `data/processed/features.parquet` (130,253 rows, 60 features: 52 strict + 8 caution) and the audit.
+
+### Concepts
+- **Kinds of leakage found in this data:**
+  - *Target leakage*: a column filled in because of the outcome (`why_stopped`, `has_results`).
+  - *Overwritten values*: `enrollment_count` is planned at the start but replaced by the actual number at the end (98% of rows). Terminated trials enroll fewer people (median 19 vs 60), so on its own it scores AUC 0.741, far above any real feature (best: 0.584).
+  - *Train/serve mismatch*: a live recruiting trial only has the *planned* enrollment, so a model trained on actual counts would be used on a different quantity.
+  - *Selection leakage*: 25,035 trials were registered only after they ended, and only 1.9% of them are terminated. They are not real "at start" cases, so they are dropped.
+- **Time-based split**: train 2010–2016, validation 2017, test 2018. A random split lets the model learn from trials that started *after* the ones it is judged on. That can't happen in real use, so a random split gives optimistic scores.
+- **Never tune on the test set**: if you pick settings by looking at test scores, the test score is no longer an honest estimate. `load_features()` refuses to return the test split unless `final_evaluation=True`.
+- **Right-censoring**: a trial that started in 2020 and is still running has no label yet, so it is missing from the data. The long trials are the ones missing (5.9% of finished 2019 trials and 2.6% of finished 2020 trials lasted more than 5 years, against 11.2% for 2010), so 2019–2020 are a separate "recent" set.
+- **Single-feature AUC**: score each feature on its own. If one simple column almost predicts the label, it is often leakage. 0.5 means no signal; I report max(AUC, 1−AUC).
+- **Drift (total variation distance)**: half the sum of the differences between two distributions. 0 means the same, 1 means no overlap. It found a registry rule change (below).
+- **Preprocessing is fitted on train only**: encoding, filling gaps and scaling are learned from training rows in Phase 9. Fitting them on all years would let test-year information leak in.
+
+### Design decisions (decided with the project owner)
+- `enrollment_count` was reclassified from *caution* to *leakage* and excluded.
+- Late registrations are dropped, and the count and reason are in the audit and the data report.
+- COVID: `covid_terminated` is a flag (from `why_stopped`, data cleaning only). The `main` version leaves out the 1,285 flagged trials; `with_covid` keeps them for a Phase 9 comparison. I read the 69 flagged trials with all their dates before 2020. They are real COVID stops: for terminated trials the registry often records the last patient's date (before the pause) as the end date.
+- *Caution* features (sites, countries, collaborators, outcome counts, eligibility text length) are separate, so Phase 9 can measure them, and the model card will list them.
+- Every `trials.parquet` column is either a feature source or listed in `EXCLUDED_COLUMNS` with a reason. A test enforces this, so a new column can't slip in silently.
+- The audit is generated from code, like the data report: no hand-typed numbers.
+
+### Measured results (snapshot 2026-10-09)
+- 155,288 → 130,253 trials after dropping 25,035 late registrations.
+- Main version: train 77,902 (12.3% terminated), validation 13,259 (12.1%), test 13,299 (11.7%), recent 24,508 (11.6%).
+- No feature reaches single-feature AUC 0.65 (highest: `eligibility_criteria_chars` 0.584, `phase` 0.578).
+- **Open issue:** `is_fda_regulated_drug/device` drift 0.831. They are MISSING in 74–95% of 2010–2016 trials and in under 5% from 2017, when the fields became required. The training years mostly teach "MISSING", a value live trials never have. Whether to drop them is a Phase 9 decision.
+
+### Likely interview questions
+**Q: How did you make sure your model only uses information available at trial start?**
+A: Every column is labelled yes / caution / no in the data dictionary, and a test checks that features only come from allowed columns. Every excluded column has a written reason. Then a generated audit scores each feature on its own; a suspiciously strong one would be flagged. As a contrast, I measured the excluded `enrollment_count`: AUC 0.741 alone, against 0.584 for the best real feature, because it stores the *actual* enrollment, which is low when a trial stops early.
+
+**Q: Why a time-based split instead of a random one?**
+A: In real use the model is trained on the past and used on trials starting later. A random split mixes years, so the model learns patterns from the "future". I train on 2010–2016, tune on 2017, and test once on 2018. 2019–2020 are kept separate because many of those trials are still running, which is right-censoring. The code refuses to load the test split unless it's the final evaluation.
+
+**Q: What was the most surprising data problem?**
+A: 16% of "finished" trials were registered only after they had ended, and 98% of those were completed: sponsors register finished trials so they can publish them. Kept in, the model would learn "late registration means success", which is useless for a new trial. Another: the drift check found that two FDA fields became required in 2017, so they are almost always missing in my training years and almost never missing afterwards.

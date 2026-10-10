@@ -14,7 +14,7 @@ LEARNING.md is updated and the work is committed. Rules are in `CLAUDE.md`.
 ## Stage A – My own ML model
 - [x] Phase 7: Dataset builder: finished interventional trials (~2010-2020) from
       ClinicalTrials.gov; label COMPLETED = 0, TERMINATED = 1; exclude WITHDRAWN at first
-- [ ] Phase 8: Features known at trial start, leakage audit, time-based split
+- [x] Phase 8: Features known at trial start, leakage audit, time-based split
 - [ ] Phase 9: Train and evaluate (Logistic Regression baseline, Random Forest,
       XGBoost/LightGBM), calibration, saved model, MODEL_CARD.md
 - [ ] Phase 10: Add risk prediction (Low/Medium/High + disclaimer) to the pipeline

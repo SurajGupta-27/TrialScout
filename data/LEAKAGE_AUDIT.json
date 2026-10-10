@@ -1,0 +1,1497 @@
+{
+  "generated_at": "2026-10-10T20:03:46",
+  "auc_review_threshold": 0.65,
+  "drift_review_threshold": 0.25,
+  "split_years": {
+    "train": [
+      2010,
+      2016
+    ],
+    "val": [
+      2017,
+      2017
+    ],
+    "test": [
+      2018,
+      2018
+    ],
+    "recent": [
+      2019,
+      2020
+    ]
+  },
+  "versions": {
+    "main": "without trials terminated because of COVID-19",
+    "with_covid": "all trials, including those terminated because of COVID-19"
+  },
+  "cleaning": {
+    "trials_in": 155288,
+    "late_registration": {
+      "reason": "registered after primary completion: the outcome was already known when the trial was first registered, so no prediction 'at trial start' was ever possible (and almost all of these are COMPLETED, which would teach a false shortcut)",
+      "dropped": 25035,
+      "terminated_among_dropped": 473,
+      "terminated_pct_among_dropped": 1.9,
+      "kept_without_any_end_date": 20
+    },
+    "rows_kept": 130253,
+    "covid_terminated": {
+      "flagged": 1285,
+      "flagged_but_ended_before_2020": 92,
+      "how": "label = TERMINATED and why_stopped matches the COVID keyword pattern (why_stopped is used only for this flag, never as a feature)"
+    }
+  },
+  "split_balance": [
+    {
+      "split": "train",
+      "years": "2010-2016",
+      "version": "main",
+      "rows": 77902,
+      "terminated": 9612,
+      "terminated_pct": 12.3
+    },
+    {
+      "split": "train",
+      "years": "2010-2016",
+      "version": "with_covid",
+      "rows": 78033,
+      "terminated": 9743,
+      "terminated_pct": 12.5
+    },
+    {
+      "split": "val",
+      "years": "2017",
+      "version": "main",
+      "rows": 13259,
+      "terminated": 1601,
+      "terminated_pct": 12.1
+    },
+    {
+      "split": "val",
+      "years": "2017",
+      "version": "with_covid",
+      "rows": 13389,
+      "terminated": 1731,
+      "terminated_pct": 12.9
+    },
+    {
+      "split": "test",
+      "years": "2018",
+      "version": "main",
+      "rows": 13299,
+      "terminated": 1552,
+      "terminated_pct": 11.7
+    },
+    {
+      "split": "test",
+      "years": "2018",
+      "version": "with_covid",
+      "rows": 13569,
+      "terminated": 1822,
+      "terminated_pct": 13.4
+    },
+    {
+      "split": "recent",
+      "years": "2019-2020",
+      "version": "main",
+      "rows": 24508,
+      "terminated": 2852,
+      "terminated_pct": 11.6
+    },
+    {
+      "split": "recent",
+      "years": "2019-2020",
+      "version": "with_covid",
+      "rows": 25262,
+      "terminated": 3606,
+      "terminated_pct": 14.3
+    }
+  ],
+  "censoring_counts_snapshot": "2026-10-09T09:00:05",
+  "censoring": [
+    {
+      "start_year": 2010,
+      "all_trials": 13420,
+      "still_running_pct": 0.9,
+      "unknown_status_pct": 10.4,
+      "finished_pct": 85.5,
+      "finished_lasting_over_5y_pct": 11.2,
+      "terminated_pct_if_finished_within_5y": 11.7
+    },
+    {
+      "start_year": 2011,
+      "all_trials": 14217,
+      "still_running_pct": 0.9,
+      "unknown_status_pct": 11.5,
+      "finished_pct": 84.4,
+      "finished_lasting_over_5y_pct": 11.1,
+      "terminated_pct_if_finished_within_5y": 10.9
+    },
+    {
+      "start_year": 2012,
+      "all_trials": 15027,
+      "still_running_pct": 1.3,
+      "unknown_status_pct": 12.1,
+      "finished_pct": 83.2,
+      "finished_lasting_over_5y_pct": 11.2,
+      "terminated_pct_if_finished_within_5y": 10.9
+    },
+    {
+      "start_year": 2013,
+      "all_trials": 15896,
+      "still_running_pct": 1.5,
+      "unknown_status_pct": 13.2,
+      "finished_pct": 81.8,
+      "finished_lasting_over_5y_pct": 10.4,
+      "terminated_pct_if_finished_within_5y": 10.6
+    },
+    {
+      "start_year": 2014,
+      "all_trials": 17600,
+      "still_running_pct": 2.1,
+      "unknown_status_pct": 14.4,
+      "finished_pct": 80.0,
+      "finished_lasting_over_5y_pct": 9.3,
+      "terminated_pct_if_finished_within_5y": 10.2
+    },
+    {
+      "start_year": 2015,
+      "all_trials": 18947,
+      "still_running_pct": 2.5,
+      "unknown_status_pct": 15.9,
+      "finished_pct": 78.1,
+      "finished_lasting_over_5y_pct": 9.1,
+      "terminated_pct_if_finished_within_5y": 10.4
+    },
+    {
+      "start_year": 2016,
+      "all_trials": 20370,
+      "still_running_pct": 3.1,
+      "unknown_status_pct": 18.4,
+      "finished_pct": 74.7,
+      "finished_lasting_over_5y_pct": 8.9,
+      "terminated_pct_if_finished_within_5y": 9.9
+    },
+    {
+      "start_year": 2017,
+      "all_trials": 21265,
+      "still_running_pct": 4.4,
+      "unknown_status_pct": 18.1,
+      "finished_pct": 74.2,
+      "finished_lasting_over_5y_pct": 8.2,
+      "terminated_pct_if_finished_within_5y": 10.8
+    },
+    {
+      "start_year": 2018,
+      "all_trials": 22870,
+      "still_running_pct": 5.7,
+      "unknown_status_pct": 20.0,
+      "finished_pct": 70.8,
+      "finished_lasting_over_5y_pct": 7.8,
+      "terminated_pct_if_finished_within_5y": 11.2
+    },
+    {
+      "start_year": 2019,
+      "all_trials": 23827,
+      "still_running_pct": 8.0,
+      "unknown_status_pct": 22.0,
+      "finished_pct": 66.3,
+      "finished_lasting_over_5y_pct": 5.9,
+      "terminated_pct_if_finished_within_5y": 12.2
+    },
+    {
+      "start_year": 2020,
+      "all_trials": 23596,
+      "still_running_pct": 10.1,
+      "unknown_status_pct": 24.3,
+      "finished_pct": 61.4,
+      "finished_lasting_over_5y_pct": 2.6,
+      "terminated_pct_if_finished_within_5y": 11.8
+    }
+  ],
+  "features": [
+    {
+      "feature": "phase",
+      "group": "strict",
+      "kind": "category",
+      "sources": [
+        "phase"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "Phase or phase combination, e.g. PHASE2/PHASE3; NA = not applicable",
+      "auc_train": 0.578,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.1,
+      "drift_train_vs_val": 0.116,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "primary_purpose",
+      "group": "strict",
+      "kind": "category",
+      "sources": [
+        "primary_purpose"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "TREATMENT, PREVENTION, BASIC_SCIENCE, ...",
+      "auc_train": 0.57,
+      "missing_pct_completed": 2.8,
+      "missing_pct_terminated": 1.4,
+      "drift_train_vs_val": 0.08,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "allocation",
+      "group": "strict",
+      "kind": "category",
+      "sources": [
+        "allocation"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "RANDOMIZED, NON_RANDOMIZED or NA",
+      "auc_train": 0.549,
+      "missing_pct_completed": 0.4,
+      "missing_pct_terminated": 0.4,
+      "drift_train_vs_val": 0.007,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "intervention_model",
+      "group": "strict",
+      "kind": "category",
+      "sources": [
+        "intervention_model"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "PARALLEL, SINGLE_GROUP, CROSSOVER, ...",
+      "auc_train": 0.562,
+      "missing_pct_completed": 0.3,
+      "missing_pct_terminated": 0.5,
+      "drift_train_vs_val": 0.042,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "masking",
+      "group": "strict",
+      "kind": "category",
+      "sources": [
+        "masking"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "NONE, SINGLE, DOUBLE, TRIPLE, QUADRUPLE",
+      "auc_train": 0.553,
+      "missing_pct_completed": 0.4,
+      "missing_pct_terminated": 0.4,
+      "drift_train_vs_val": 0.017,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "lead_sponsor_class",
+      "group": "strict",
+      "kind": "category",
+      "sources": [
+        "lead_sponsor_class"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "INDUSTRY, NIH, OTHER_GOV, OTHER, ...",
+      "auc_train": 0.515,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.066,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "responsible_party_type",
+      "group": "strict",
+      "kind": "category",
+      "sources": [
+        "responsible_party_type"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "SPONSOR, PRINCIPAL_INVESTIGATOR or SPONSOR_INVESTIGATOR",
+      "auc_train": 0.538,
+      "missing_pct_completed": 1.3,
+      "missing_pct_terminated": 1.1,
+      "drift_train_vs_val": 0.049,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "sex",
+      "group": "strict",
+      "kind": "category",
+      "sources": [
+        "sex"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "ALL, FEMALE or MALE",
+      "auc_train": 0.511,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.005,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "has_dmc",
+      "group": "strict",
+      "kind": "category",
+      "sources": [
+        "has_dmc"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "Has a data monitoring committee: yes / no / MISSING",
+      "auc_train": 0.538,
+      "missing_pct_completed": 8.1,
+      "missing_pct_terminated": 6.5,
+      "drift_train_vs_val": 0.026,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "is_fda_regulated_drug",
+      "group": "strict",
+      "kind": "category",
+      "sources": [
+        "is_fda_regulated_drug"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "Studies an FDA-regulated drug: yes / no / MISSING",
+      "auc_train": 0.526,
+      "missing_pct_completed": 87.5,
+      "missing_pct_terminated": 85.4,
+      "drift_train_vs_val": 0.831,
+      "review_reasons": [
+        "high drift"
+      ],
+      "needs_review": true,
+      "review_note": "Field became required for new registrations in 2017 (FDAAA Final Rule): MISSING in 74-95% of 2010-2016 trials, under 5% from 2017. The training years mostly teach 'MISSING', a value live trials never have. Decision for Phase 9 pending (see LEARNING.md, Phase 8)."
+    },
+    {
+      "feature": "is_fda_regulated_device",
+      "group": "strict",
+      "kind": "category",
+      "sources": [
+        "is_fda_regulated_device"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "Studies an FDA-regulated device: yes / no / MISSING",
+      "auc_train": 0.51,
+      "missing_pct_completed": 87.5,
+      "missing_pct_terminated": 85.5,
+      "drift_train_vs_val": 0.831,
+      "review_reasons": [
+        "high drift"
+      ],
+      "needs_review": true,
+      "review_note": "Field became required for new registrations in 2017 (FDAAA Final Rule): MISSING in 74-95% of 2010-2016 trials, under 5% from 2017. The training years mostly teach 'MISSING', a value live trials never have. Decision for Phase 9 pending (see LEARNING.md, Phase 8)."
+    },
+    {
+      "feature": "healthy_volunteers",
+      "group": "strict",
+      "kind": "category",
+      "sources": [
+        "healthy_volunteers"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "Accepts healthy volunteers: yes / no / MISSING",
+      "auc_train": 0.576,
+      "missing_pct_completed": 0.1,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.04,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "n_arms",
+      "group": "strict",
+      "kind": "number",
+      "sources": [
+        "n_arms"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "Number of arms (groups)",
+      "auc_train": 0.548,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.016,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "n_interventions",
+      "group": "strict",
+      "kind": "number",
+      "sources": [
+        "n_interventions"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "Number of interventions",
+      "auc_train": 0.502,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.014,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "n_conditions",
+      "group": "strict",
+      "kind": "number",
+      "sources": [
+        "n_conditions"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "Number of conditions",
+      "auc_train": 0.52,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.048,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "n_keywords",
+      "group": "strict",
+      "kind": "number",
+      "sources": [
+        "n_keywords"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "Number of keywords",
+      "auc_train": 0.503,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.112,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "min_age_years",
+      "group": "strict",
+      "kind": "number",
+      "sources": [
+        "min_age_years"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "Minimum age in years (empty = no lower limit given)",
+      "auc_train": 0.514,
+      "missing_pct_completed": 3.8,
+      "missing_pct_terminated": 3.4,
+      "drift_train_vs_val": 0.007,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "max_age_years",
+      "group": "strict",
+      "kind": "number",
+      "sources": [
+        "max_age_years"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "Maximum age in years (empty = no upper limit)",
+      "auc_train": 0.537,
+      "missing_pct_completed": 44.3,
+      "missing_pct_terminated": 55.5,
+      "drift_train_vs_val": 0.019,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "no_max_age",
+      "group": "strict",
+      "kind": "flag",
+      "sources": [
+        "max_age_years"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "No upper age limit",
+      "auc_train": 0.556,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.007,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "itype_drug",
+      "group": "strict",
+      "kind": "flag",
+      "sources": [
+        "intervention_types"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "Has a DRUG intervention",
+      "auc_train": 0.562,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.08,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "itype_biological",
+      "group": "strict",
+      "kind": "flag",
+      "sources": [
+        "intervention_types"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "Has a BIOLOGICAL intervention",
+      "auc_train": 0.501,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.006,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "itype_device",
+      "group": "strict",
+      "kind": "flag",
+      "sources": [
+        "intervention_types"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "Has a DEVICE intervention",
+      "auc_train": 0.511,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.026,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "itype_procedure",
+      "group": "strict",
+      "kind": "flag",
+      "sources": [
+        "intervention_types"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "Has a PROCEDURE intervention",
+      "auc_train": 0.514,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.005,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "itype_radiation",
+      "group": "strict",
+      "kind": "flag",
+      "sources": [
+        "intervention_types"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "Has a RADIATION intervention",
+      "auc_train": 0.51,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.005,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "itype_behavioral",
+      "group": "strict",
+      "kind": "flag",
+      "sources": [
+        "intervention_types"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "Has a BEHAVIORAL intervention",
+      "auc_train": 0.541,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.031,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "itype_genetic",
+      "group": "strict",
+      "kind": "flag",
+      "sources": [
+        "intervention_types"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "Has a GENETIC intervention",
+      "auc_train": 0.502,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.001,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "itype_dietary_supplement",
+      "group": "strict",
+      "kind": "flag",
+      "sources": [
+        "intervention_types"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "Has a DIETARY_SUPPLEMENT intervention",
+      "auc_train": 0.509,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.003,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "itype_combination_product",
+      "group": "strict",
+      "kind": "flag",
+      "sources": [
+        "intervention_types"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "Has a COMBINATION_PRODUCT intervention",
+      "auc_train": 0.5,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.006,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "itype_diagnostic_test",
+      "group": "strict",
+      "kind": "flag",
+      "sources": [
+        "intervention_types"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "Has a DIAGNOSTIC_TEST intervention",
+      "auc_train": 0.5,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.016,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "itype_other",
+      "group": "strict",
+      "kind": "flag",
+      "sources": [
+        "intervention_types"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "Has a OTHER intervention",
+      "auc_train": 0.511,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.03,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "age_child",
+      "group": "strict",
+      "kind": "flag",
+      "sources": [
+        "std_ages"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "Eligible age group includes CHILD",
+      "auc_train": 0.515,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.004,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "age_adult",
+      "group": "strict",
+      "kind": "flag",
+      "sources": [
+        "std_ages"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "Eligible age group includes ADULT",
+      "auc_train": 0.511,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.001,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "age_older_adult",
+      "group": "strict",
+      "kind": "flag",
+      "sources": [
+        "std_ages"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "Eligible age group includes OLDER_ADULT",
+      "auc_train": 0.548,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.006,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "area_cancer",
+      "group": "strict",
+      "kind": "flag",
+      "sources": [
+        "condition_mesh_terms",
+        "condition_mesh_ancestors"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "A condition is in MeSH 'Neoplasms'",
+      "auc_train": 0.57,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.016,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "area_cardiovascular",
+      "group": "strict",
+      "kind": "flag",
+      "sources": [
+        "condition_mesh_terms",
+        "condition_mesh_ancestors"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "A condition is in MeSH 'Cardiovascular Diseases'",
+      "auc_train": 0.509,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.011,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "area_nervous_system",
+      "group": "strict",
+      "kind": "flag",
+      "sources": [
+        "condition_mesh_terms",
+        "condition_mesh_ancestors"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "A condition is in MeSH 'Nervous System Diseases'",
+      "auc_train": 0.506,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.008,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "area_mental",
+      "group": "strict",
+      "kind": "flag",
+      "sources": [
+        "condition_mesh_terms",
+        "condition_mesh_ancestors"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "A condition is in MeSH 'Mental Disorders'",
+      "auc_train": 0.512,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.003,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "area_infections",
+      "group": "strict",
+      "kind": "flag",
+      "sources": [
+        "condition_mesh_terms",
+        "condition_mesh_ancestors"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "A condition is in MeSH 'Infections'",
+      "auc_train": 0.51,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.014,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "area_respiratory",
+      "group": "strict",
+      "kind": "flag",
+      "sources": [
+        "condition_mesh_terms",
+        "condition_mesh_ancestors"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "A condition is in MeSH 'Respiratory Tract Diseases'",
+      "auc_train": 0.506,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.008,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "area_digestive",
+      "group": "strict",
+      "kind": "flag",
+      "sources": [
+        "condition_mesh_terms",
+        "condition_mesh_ancestors"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "A condition is in MeSH 'Digestive System Diseases'",
+      "auc_train": 0.514,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.008,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "area_nutrition_metabolic",
+      "group": "strict",
+      "kind": "flag",
+      "sources": [
+        "condition_mesh_terms",
+        "condition_mesh_ancestors"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "A condition is in MeSH 'Nutritional and Metabolic Diseases'",
+      "auc_train": 0.52,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.012,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "area_endocrine",
+      "group": "strict",
+      "kind": "flag",
+      "sources": [
+        "condition_mesh_terms",
+        "condition_mesh_ancestors"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "A condition is in MeSH 'Endocrine System Diseases'",
+      "auc_train": 0.504,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.013,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "area_urogenital_pregnancy",
+      "group": "strict",
+      "kind": "flag",
+      "sources": [
+        "condition_mesh_terms",
+        "condition_mesh_ancestors"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "A condition is in MeSH 'Urogenital Diseases'",
+      "auc_train": 0.51,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.001,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "area_immune",
+      "group": "strict",
+      "kind": "flag",
+      "sources": [
+        "condition_mesh_terms",
+        "condition_mesh_ancestors"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "A condition is in MeSH 'Immune System Diseases'",
+      "auc_train": 0.509,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.016,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "area_skin_connective",
+      "group": "strict",
+      "kind": "flag",
+      "sources": [
+        "condition_mesh_terms",
+        "condition_mesh_ancestors"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "A condition is in MeSH 'Skin and Connective Tissue Diseases'",
+      "auc_train": 0.515,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.005,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "area_musculoskeletal",
+      "group": "strict",
+      "kind": "flag",
+      "sources": [
+        "condition_mesh_terms",
+        "condition_mesh_ancestors"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "A condition is in MeSH 'Musculoskeletal Diseases'",
+      "auc_train": 0.501,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.003,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "area_blood_lymph",
+      "group": "strict",
+      "kind": "flag",
+      "sources": [
+        "condition_mesh_terms",
+        "condition_mesh_ancestors"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "A condition is in MeSH 'Hemic and Lymphatic Diseases'",
+      "auc_train": 0.522,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.009,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "area_eye",
+      "group": "strict",
+      "kind": "flag",
+      "sources": [
+        "condition_mesh_terms",
+        "condition_mesh_ancestors"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "A condition is in MeSH 'Eye Diseases'",
+      "auc_train": 0.5,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.005,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "area_injuries",
+      "group": "strict",
+      "kind": "flag",
+      "sources": [
+        "condition_mesh_terms",
+        "condition_mesh_ancestors"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "A condition is in MeSH 'Wounds and Injuries'",
+      "auc_train": 0.505,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.002,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "area_congenital",
+      "group": "strict",
+      "kind": "flag",
+      "sources": [
+        "condition_mesh_terms",
+        "condition_mesh_ancestors"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "A condition is in MeSH 'Congenital, Hereditary, and Neonatal Diseases and Abnormalities'",
+      "auc_train": 0.503,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.001,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "area_signs_symptoms",
+      "group": "strict",
+      "kind": "flag",
+      "sources": [
+        "condition_mesh_terms",
+        "condition_mesh_ancestors"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "A condition is in MeSH 'Pathological Conditions, Signs and Symptoms'",
+      "auc_train": 0.505,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.005,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "area_unknown",
+      "group": "strict",
+      "kind": "flag",
+      "sources": [
+        "condition_mesh_terms",
+        "condition_mesh_ancestors"
+      ],
+      "sources_known_at_start": [
+        "yes"
+      ],
+      "meaning": "No MeSH term for any condition (area unknown)",
+      "auc_train": 0.525,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.035,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "n_locations",
+      "group": "caution",
+      "kind": "number",
+      "sources": [
+        "n_locations"
+      ],
+      "sources_known_at_start": [
+        "caution"
+      ],
+      "meaning": "Number of sites in the latest record (sites are added/removed during a trial)",
+      "auc_train": 0.525,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.063,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "n_countries",
+      "group": "caution",
+      "kind": "number",
+      "sources": [
+        "n_countries"
+      ],
+      "sources_known_at_start": [
+        "caution"
+      ],
+      "meaning": "Number of site countries in the latest record",
+      "auc_train": 0.515,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.05,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "n_collaborators",
+      "group": "caution",
+      "kind": "number",
+      "sources": [
+        "n_collaborators"
+      ],
+      "sources_known_at_start": [
+        "caution"
+      ],
+      "meaning": "Number of collaborators in the latest record",
+      "auc_train": 0.517,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.017,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "n_primary_outcomes",
+      "group": "caution",
+      "kind": "number",
+      "sources": [
+        "n_primary_outcomes"
+      ],
+      "sources_known_at_start": [
+        "caution"
+      ],
+      "meaning": "Number of primary outcomes (outcomes can be edited later)",
+      "auc_train": 0.526,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.062,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "n_secondary_outcomes",
+      "group": "caution",
+      "kind": "number",
+      "sources": [
+        "n_secondary_outcomes"
+      ],
+      "sources_known_at_start": [
+        "caution"
+      ],
+      "meaning": "Number of secondary outcomes (outcomes can be edited later)",
+      "auc_train": 0.509,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.076,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "eligibility_criteria_chars",
+      "group": "caution",
+      "kind": "number",
+      "sources": [
+        "eligibility_criteria_chars"
+      ],
+      "sources_known_at_start": [
+        "caution"
+      ],
+      "meaning": "Length of the eligibility text (criteria can be amended later)",
+      "auc_train": 0.584,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.046,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "has_us_site",
+      "group": "caution",
+      "kind": "flag",
+      "sources": [
+        "countries"
+      ],
+      "sources_known_at_start": [
+        "caution"
+      ],
+      "meaning": "Has a site in the United States (latest record)",
+      "auc_train": 0.57,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.0,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    },
+    {
+      "feature": "multi_country",
+      "group": "caution",
+      "kind": "flag",
+      "sources": [
+        "n_countries"
+      ],
+      "sources_known_at_start": [
+        "caution"
+      ],
+      "meaning": "Sites in more than one country (latest record)",
+      "auc_train": 0.511,
+      "missing_pct_completed": 0.0,
+      "missing_pct_terminated": 0.0,
+      "drift_train_vs_val": 0.015,
+      "review_reasons": [],
+      "needs_review": false,
+      "review_note": ""
+    }
+  ],
+  "caution_features": [
+    "n_locations",
+    "n_countries",
+    "n_collaborators",
+    "n_primary_outcomes",
+    "n_secondary_outcomes",
+    "eligibility_criteria_chars",
+    "has_us_site",
+    "multi_country"
+  ],
+  "excluded_columns": [
+    {
+      "column": "nct_id",
+      "known_at_start": "yes",
+      "reason": "Identifier, kept only to join rows. Carries no information about the outcome."
+    },
+    {
+      "column": "brief_title",
+      "known_at_start": "yes",
+      "reason": "Free text. Could be used later with text embeddings; not in this simple feature set."
+    },
+    {
+      "column": "overall_status",
+      "known_at_start": "label",
+      "reason": "The raw status the label comes from (the answer itself)."
+    },
+    {
+      "column": "label",
+      "known_at_start": "label",
+      "reason": "The target."
+    },
+    {
+      "column": "start_date",
+      "known_at_start": "yes",
+      "reason": "Used only for the time-based split (via start_year)."
+    },
+    {
+      "column": "start_year",
+      "known_at_start": "yes",
+      "reason": "Used only for the time-based split. As a feature it can't describe future years the model has never seen."
+    },
+    {
+      "column": "start_date_type",
+      "known_at_start": "caution",
+      "reason": "Describes the record's format, not the trial: 37% are empty only because the records are old."
+    },
+    {
+      "column": "first_submit_date",
+      "known_at_start": "yes",
+      "reason": "Used only to drop late registrations. As a feature (registration delay) it leaks: trials registered after they ended are almost all COMPLETED."
+    },
+    {
+      "column": "primary_completion_date",
+      "known_at_start": "no",
+      "reason": "Known only when the trial ends. Used only to drop late registrations."
+    },
+    {
+      "column": "completion_date",
+      "known_at_start": "no",
+      "reason": "Known only when the trial ends. Used only as a fallback end date for the late-registration filter."
+    },
+    {
+      "column": "last_update_date",
+      "known_at_start": "no",
+      "reason": "Known only after the trial: finished trials are updated when they close."
+    },
+    {
+      "column": "why_stopped",
+      "known_at_start": "no",
+      "reason": "Filled almost only for TERMINATED trials, so it nearly is the label. Used only to flag COVID-terminated trials (data cleaning), never as a feature."
+    },
+    {
+      "column": "has_results",
+      "known_at_start": "no",
+      "reason": "Results are posted after the trial ends."
+    },
+    {
+      "column": "enrollment_count",
+      "known_at_start": "no",
+      "reason": "LEAKAGE (reclassified from caution in Phase 8): ~98% of finished trials hold the ACTUAL final number, and trials that stop early enroll fewer people (median 19 vs 60). It would also cause a train/serve mismatch: a live recruiting trial only has the PLANNED number, so the model would be trained on one meaning and used on another."
+    },
+    {
+      "column": "enrollment_type",
+      "known_at_start": "no",
+      "reason": "ACTUAL or ESTIMATED: says whether the trial has finished, so it is leakage."
+    },
+    {
+      "column": "phases",
+      "known_at_start": "yes",
+      "reason": "Duplicate of `phase` (same information as a list)."
+    },
+    {
+      "column": "intervention_mesh_terms",
+      "known_at_start": "yes",
+      "reason": "Thousands of distinct drug/device terms and 45% empty. The intervention types (DRUG, DEVICE, ...) are used instead."
+    },
+    {
+      "column": "lead_sponsor_name",
+      "known_at_start": "yes",
+      "reason": "About 19,500 distinct names. It would need target encoding, which easily leaks; `lead_sponsor_class` is used instead."
+    },
+    {
+      "column": "conditions",
+      "known_at_start": "yes",
+      "reason": "Free text as written by the sponsor (thousands of values). Grouped into MeSH disease areas instead."
+    }
+  ],
+  "measured_leaks": [
+    {
+      "column": "enrollment_count",
+      "auc_train": 0.741
+    },
+    {
+      "column": "registration delay (first_submit_date - start_date, days)",
+      "auc_train": 0.562
+    },
+    {
+      "column": "has_results",
+      "auc_train": 0.545
+    }
+  ]
+}

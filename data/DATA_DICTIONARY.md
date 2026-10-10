@@ -4,11 +4,11 @@ Generated from `src/dataset/columns.py` by `python -m src.dataset.build`. One ro
 
 **Known at start** says whether a column could be used to predict the outcome *when the trial begins*:
 - **yes**: decided when the trial is designed or registered.
-- **caution**: planned at start but often edited later. The registry keeps only the latest version, so the value may reflect what happened (e.g. enrollment becomes the actual number).
-- **no**: only known during or after the trial. **Leakage: never use as a feature.**
+- **caution**: planned at start but often edited later. The registry keeps only the latest version, so the value may reflect what happened (e.g. sites added or removed during the trial).
+- **no**: only known during or after the trial. **Leakage: never use as a feature.** This includes `enrollment_count`, which holds the *actual* final number for ~98% of finished trials.
 - **label**: the target.
 
-Note: every value comes from the *current* registry record, not a copy from the start date. Phase 8 audits this before choosing features.
+Note: every value comes from the *current* registry record, not a copy from the start date. Which columns become features, and why the others don't, is in `data/LEAKAGE_AUDIT.md` (Phase 8).
 
 | Column | Type | Known at start | Meaning | API source |
 |---|---|---|---|---|
@@ -31,7 +31,7 @@ Note: every value comes from the *current* registry record, not a copy from the 
 | `allocation` | string | yes | RANDOMIZED, NON_RANDOMIZED or NA | `protocolSection.designModule.designInfo.allocation` |
 | `intervention_model` | string | yes | PARALLEL, SINGLE_GROUP, CROSSOVER, ... | `protocolSection.designModule.designInfo.interventionModel` |
 | `masking` | string | yes | NONE, SINGLE, DOUBLE, TRIPLE, QUADRUPLE | `protocolSection.designModule.designInfo.maskingInfo.masking` |
-| `enrollment_count` | int | caution | Number of participants. Planned at start, but replaced by the ACTUAL number at the end | `protocolSection.designModule.enrollmentInfo.count` |
+| `enrollment_count` | int | no | Number of participants. Planned at start, but replaced by the ACTUAL number at the end (true for ~98% of rows), so it is leakage | `protocolSection.designModule.enrollmentInfo.count` |
 | `enrollment_type` | string | no | ACTUAL or ESTIMATED: tells whether enrollment_count was updated after the trial | `protocolSection.designModule.enrollmentInfo.type` |
 | `n_arms` | int | yes | Number of arms (groups) | `protocolSection.armsInterventionsModule.armGroups` |
 | `n_interventions` | int | yes | Number of interventions | `protocolSection.armsInterventionsModule.interventions` |

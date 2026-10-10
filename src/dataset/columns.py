@@ -6,7 +6,7 @@ so the documentation can't drift away from the code.
 "known_at_start" values:
     yes      - decided when the trial is designed/registered.
     caution  - planned at start, but often edited later, and the registry only keeps
-               the latest version (e.g. enrollment becomes the *actual* number).
+               the latest version (e.g. sites added or removed while the trial runs).
     no       - only known during or after the trial. LEAKAGE: never use as a feature.
     label    - the target (or the raw status it comes from).
 """
@@ -64,8 +64,10 @@ COLUMNS: list[Column] = [
            "PARALLEL, SINGLE_GROUP, CROSSOVER, ...", "yes"),
     Column("masking", "string", f"{P}.designModule.designInfo.maskingInfo.masking",
            "NONE, SINGLE, DOUBLE, TRIPLE, QUADRUPLE", "yes"),
+    # Reclassified caution -> no in Phase 8: ~98% of finished trials hold the ACTUAL count.
     Column("enrollment_count", "int", f"{P}.designModule.enrollmentInfo.count",
-           "Number of participants. Planned at start, but replaced by the ACTUAL number at the end", "caution"),
+           "Number of participants. Planned at start, but replaced by the ACTUAL number at the end "
+           "(true for ~98% of rows), so it is leakage", "no"),
     Column("enrollment_type", "string", f"{P}.designModule.enrollmentInfo.type",
            "ACTUAL or ESTIMATED: tells whether enrollment_count was updated after the trial", "no"),
 

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-10T19:07:19",
+  "generated_at": "2026-10-10T19:49:25",
   "start_year_range": [
     2010,
     2020
@@ -118,6 +118,13 @@
       "why_stopped_mentions_covid": 255
     }
   ],
+  "modelling_filter_late_registration": {
+    "reason": "registered after primary completion: the outcome was already known when the trial was first registered, so no prediction 'at trial start' was ever possible (and almost all of these are COMPLETED, which would teach a false shortcut)",
+    "rows_dropped": 25035,
+    "terminated_among_dropped": 473,
+    "terminated_pct_among_dropped": 1.9,
+    "rows_kept_for_modelling": 130253
+  },
   "missing_values": [
     {
       "column": "nct_id",

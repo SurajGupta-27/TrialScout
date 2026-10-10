@@ -76,6 +76,28 @@ RAW_DIR = DATA_DIR / "raw"
 PROCESSED_DIR = DATA_DIR / "processed"
 DATASET_PATH = PROCESSED_DIR / "trials.parquet"
 
+# --- Phase 8: features, leakage audit, time-based split ----------------------
+# Split by start year: train on older trials, judge on newer ones (see LEARNING.md, Phase 8).
+# "test" (2018) is ONLY for the final evaluation in Phase 9, never for tuning.
+# "recent" (2019-2020) is reported on its own: many of those trials are still running.
+SPLIT_YEARS = {
+    "train": (2010, 2016),
+    "val": (2017, 2017),
+    "test": (2018, 2018),
+    "recent": (2019, 2020),
+}
+
+# In the leakage audit, a single feature that separates the classes this well
+# (AUC, 0.5 = no signal) is flagged for a manual check.
+AUDIT_AUC_REVIEW_THRESHOLD = 0.65
+# ...and a feature whose distribution changes this much between train and validation
+# (total variation distance, 0 = same, 1 = no overlap) is flagged too.
+AUDIT_DRIFT_REVIEW_THRESHOLD = 0.25
+
+FEATURES_PATH = PROCESSED_DIR / "features.parquet"
+# Live API counts of still-running trials per start year (for the censoring check).
+CENSORING_COUNTS_PATH = DATA_DIR / "censoring_counts.json"
+
 
 def get_api_key() -> str:
     """Return the Gemini API key from .env locally or st.secrets on Streamlit Cloud.
