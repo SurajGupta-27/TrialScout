@@ -5,6 +5,7 @@ import re
 import time
 from functools import lru_cache
 
+import httpx
 from google import genai
 from google.genai import errors, types
 
@@ -22,6 +23,17 @@ from src.trials_api import format_phase, format_status
 
 # HTTP codes that mean "busy, try again later" rather than "your request is wrong".
 RETRYABLE_STATUS_CODES = {429, 500, 503}
+
+# Network problems where Gemini never answered, so trying again may work:
+# "Server disconnected", connection reset or refused, and timeouts.
+# (The SDK sends requests with httpx; its own retries are off, see get_client().)
+RETRYABLE_NETWORK_ERRORS = (
+    httpx.NetworkError,         # connect / read / write failures, connection reset
+    httpx.RemoteProtocolError,  # "Server disconnected without sending a response"
+    httpx.TimeoutException,     # connect / read / write / pool timeouts
+    ConnectionError,            # plain Python socket errors, just in case
+    TimeoutError,
+)
 
 FILTER_KEYS = ("condition", "phase", "status", "country")
 
@@ -73,7 +85,8 @@ def generate_text(
     """Send a prompt to Gemini and return its text reply.
 
     If json_schema is given, Gemini is asked to reply with JSON matching it.
-    Temporary errors (rate limit, overloaded) are retried with a growing wait.
+    Temporary errors (rate limit, overloaded) and dropped connections are
+    retried with a growing wait, up to LLM_MAX_RETRIES attempts in total.
 
     Raises:
         LLMError: if the call still fails after retries, or the reply is empty.
@@ -98,8 +111,16 @@ def generate_text(
             if give_up:
                 raise LLMError(f"Gemini error {exc.code}: {exc.message}") from exc
             time.sleep(wait)
+        except RETRYABLE_NETWORK_ERRORS as exc:
+            # No answer at all (dropped connection, reset, timeout): try again.
+            if attempt == LLM_MAX_RETRIES:
+                raise LLMError(
+                    f"Could not reach Gemini after {LLM_MAX_RETRIES} attempts "
+                    f"({type(exc).__name__}: {exc}). Check your internet connection and try again."
+                ) from exc
+            time.sleep(2.0**attempt)  # 2s, 4s... same as other retries without a server hint
         except Exception as exc:
-            # No answer at all (timeout, no internet).
+            # Anything else unexpected: not worth retrying, fail with a clear message.
             raise LLMError(f"Could not reach Gemini: {exc}") from exc
 
     text = response.text

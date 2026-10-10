@@ -40,6 +40,7 @@ evaluation), README and LEARNING.md.
 streamlit run app.py                                        # web UI
 python -m src.pipeline "Phase 3 diabetes trials recruiting in India"   # terminal
 python -m tests.test_validation                             # validator tests, no API key needed
+python -m tests.test_llm_retry                              # Gemini retry tests, offline (fake client)
 python -m tests.try_extraction                              # 15-question filter check (uses Gemini)
 python -m tests.evaluate                                    # 30-question evaluation (~5 min, uses Gemini)
 python -m tests.test_dataset                                # dataset tests, offline

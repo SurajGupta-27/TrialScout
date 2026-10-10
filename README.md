@@ -115,6 +115,7 @@ Run it:
 streamlit run app.py                                    # web UI
 python -m src.pipeline "Phase 3 diabetes trials recruiting in India"   # terminal
 python -m tests.test_validation                         # validator tests (no key needed)
+python -m tests.test_llm_retry                          # Gemini retry tests (no key needed)
 python -m tests.evaluate                                # 30-question evaluation (~5 min)
 ```
 
