@@ -1,0 +1,363 @@
+{
+  "generated_at": "2026-10-10T19:07:19",
+  "start_year_range": [
+    2010,
+    2020
+  ],
+  "registry_snapshots": [
+    "2026-10-09T09:00:05"
+  ],
+  "api_counts_in_window": {
+    "all_statuses": 207035,
+    "WITHDRAWN": 7352,
+    "COMPLETED|TERMINATED": 155288
+  },
+  "not_downloaded": {
+    "WITHDRAWN (excluded on purpose)": 7352,
+    "other statuses with no final outcome": 44395
+  },
+  "downloaded_studies": 155288,
+  "excluded_after_download": {},
+  "rows": 155288,
+  "columns": 48,
+  "class_balance": {
+    "COMPLETED": {
+      "label": 0,
+      "rows": 137913,
+      "pct": 88.8
+    },
+    "TERMINATED": {
+      "label": 1,
+      "rows": 17375,
+      "pct": 11.2
+    }
+  },
+  "terminated_why_stopped_filled": 16020,
+  "terminated_why_stopped_mentions_covid": 1336,
+  "terminated_total": 17375,
+  "start_date_type": {
+    "ACTUAL": 97458,
+    "missing": 57830
+  },
+  "by_start_year": [
+    {
+      "start_year": 2010,
+      "rows": 11471,
+      "terminated": 1354,
+      "terminated_pct": 11.8,
+      "why_stopped_mentions_covid": 4
+    },
+    {
+      "start_year": 2011,
+      "rows": 11997,
+      "terminated": 1332,
+      "terminated_pct": 11.1,
+      "why_stopped_mentions_covid": 0
+    },
+    {
+      "start_year": 2012,
+      "rows": 12495,
+      "terminated": 1373,
+      "terminated_pct": 11.0,
+      "why_stopped_mentions_covid": 5
+    },
+    {
+      "start_year": 2013,
+      "rows": 12996,
+      "terminated": 1390,
+      "terminated_pct": 10.7,
+      "why_stopped_mentions_covid": 6
+    },
+    {
+      "start_year": 2014,
+      "rows": 14076,
+      "terminated": 1478,
+      "terminated_pct": 10.5,
+      "why_stopped_mentions_covid": 19
+    },
+    {
+      "start_year": 2015,
+      "rows": 14798,
+      "terminated": 1582,
+      "terminated_pct": 10.7,
+      "why_stopped_mentions_covid": 32
+    },
+    {
+      "start_year": 2016,
+      "rows": 15207,
+      "terminated": 1570,
+      "terminated_pct": 10.3,
+      "why_stopped_mentions_covid": 69
+    },
+    {
+      "start_year": 2017,
+      "rows": 15775,
+      "terminated": 1766,
+      "terminated_pct": 11.2,
+      "why_stopped_mentions_covid": 136
+    },
+    {
+      "start_year": 2018,
+      "rows": 16183,
+      "terminated": 1855,
+      "terminated_pct": 11.5,
+      "why_stopped_mentions_covid": 279
+    },
+    {
+      "start_year": 2019,
+      "rows": 15793,
+      "terminated": 1951,
+      "terminated_pct": 12.4,
+      "why_stopped_mentions_covid": 531
+    },
+    {
+      "start_year": 2020,
+      "rows": 14497,
+      "terminated": 1724,
+      "terminated_pct": 11.9,
+      "why_stopped_mentions_covid": 255
+    }
+  ],
+  "missing_values": [
+    {
+      "column": "nct_id",
+      "missing": 0,
+      "missing_pct": 0.0
+    },
+    {
+      "column": "brief_title",
+      "missing": 0,
+      "missing_pct": 0.0
+    },
+    {
+      "column": "overall_status",
+      "missing": 0,
+      "missing_pct": 0.0
+    },
+    {
+      "column": "label",
+      "missing": 0,
+      "missing_pct": 0.0
+    },
+    {
+      "column": "start_date",
+      "missing": 0,
+      "missing_pct": 0.0
+    },
+    {
+      "column": "start_year",
+      "missing": 0,
+      "missing_pct": 0.0
+    },
+    {
+      "column": "start_date_type",
+      "missing": 57830,
+      "missing_pct": 37.2
+    },
+    {
+      "column": "first_submit_date",
+      "missing": 0,
+      "missing_pct": 0.0
+    },
+    {
+      "column": "primary_completion_date",
+      "missing": 86,
+      "missing_pct": 0.1
+    },
+    {
+      "column": "completion_date",
+      "missing": 1213,
+      "missing_pct": 0.8
+    },
+    {
+      "column": "last_update_date",
+      "missing": 0,
+      "missing_pct": 0.0
+    },
+    {
+      "column": "why_stopped",
+      "missing": 139268,
+      "missing_pct": 89.7
+    },
+    {
+      "column": "has_results",
+      "missing": 0,
+      "missing_pct": 0.0
+    },
+    {
+      "column": "phases",
+      "missing": 80,
+      "missing_pct": 0.1
+    },
+    {
+      "column": "phase",
+      "missing": 80,
+      "missing_pct": 0.1
+    },
+    {
+      "column": "primary_purpose",
+      "missing": 2807,
+      "missing_pct": 1.8
+    },
+    {
+      "column": "allocation",
+      "missing": 462,
+      "missing_pct": 0.3
+    },
+    {
+      "column": "intervention_model",
+      "missing": 285,
+      "missing_pct": 0.2
+    },
+    {
+      "column": "masking",
+      "missing": 425,
+      "missing_pct": 0.3
+    },
+    {
+      "column": "enrollment_count",
+      "missing": 97,
+      "missing_pct": 0.1
+    },
+    {
+      "column": "enrollment_type",
+      "missing": 108,
+      "missing_pct": 0.1
+    },
+    {
+      "column": "n_arms",
+      "missing": 0,
+      "missing_pct": 0.0
+    },
+    {
+      "column": "n_interventions",
+      "missing": 0,
+      "missing_pct": 0.0
+    },
+    {
+      "column": "intervention_types",
+      "missing": 0,
+      "missing_pct": 0.0
+    },
+    {
+      "column": "intervention_mesh_terms",
+      "missing": 70389,
+      "missing_pct": 45.3
+    },
+    {
+      "column": "lead_sponsor_name",
+      "missing": 0,
+      "missing_pct": 0.0
+    },
+    {
+      "column": "lead_sponsor_class",
+      "missing": 0,
+      "missing_pct": 0.0
+    },
+    {
+      "column": "n_collaborators",
+      "missing": 0,
+      "missing_pct": 0.0
+    },
+    {
+      "column": "responsible_party_type",
+      "missing": 1182,
+      "missing_pct": 0.8
+    },
+    {
+      "column": "has_dmc",
+      "missing": 16453,
+      "missing_pct": 10.6
+    },
+    {
+      "column": "is_fda_regulated_drug",
+      "missing": 77940,
+      "missing_pct": 50.2
+    },
+    {
+      "column": "is_fda_regulated_device",
+      "missing": 77946,
+      "missing_pct": 50.2
+    },
+    {
+      "column": "healthy_volunteers",
+      "missing": 108,
+      "missing_pct": 0.1
+    },
+    {
+      "column": "sex",
+      "missing": 85,
+      "missing_pct": 0.1
+    },
+    {
+      "column": "min_age_years",
+      "missing": 6099,
+      "missing_pct": 3.9
+    },
+    {
+      "column": "max_age_years",
+      "missing": 67583,
+      "missing_pct": 43.5
+    },
+    {
+      "column": "std_ages",
+      "missing": 0,
+      "missing_pct": 0.0
+    },
+    {
+      "column": "eligibility_criteria_chars",
+      "missing": 7,
+      "missing_pct": 0.0
+    },
+    {
+      "column": "conditions",
+      "missing": 0,
+      "missing_pct": 0.0
+    },
+    {
+      "column": "n_conditions",
+      "missing": 0,
+      "missing_pct": 0.0
+    },
+    {
+      "column": "n_keywords",
+      "missing": 0,
+      "missing_pct": 0.0
+    },
+    {
+      "column": "condition_mesh_terms",
+      "missing": 33712,
+      "missing_pct": 21.7
+    },
+    {
+      "column": "condition_mesh_ancestors",
+      "missing": 36095,
+      "missing_pct": 23.2
+    },
+    {
+      "column": "n_primary_outcomes",
+      "missing": 0,
+      "missing_pct": 0.0
+    },
+    {
+      "column": "n_secondary_outcomes",
+      "missing": 0,
+      "missing_pct": 0.0
+    },
+    {
+      "column": "n_locations",
+      "missing": 0,
+      "missing_pct": 0.0
+    },
+    {
+      "column": "n_countries",
+      "missing": 0,
+      "missing_pct": 0.0
+    },
+    {
+      "column": "countries",
+      "missing": 9692,
+      "missing_pct": 6.2
+    }
+  ]
+}

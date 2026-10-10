@@ -1,6 +1,7 @@
 """Central settings for TrialScout. Change values here, not inside other files."""
 
 import os
+from pathlib import Path
 
 from dotenv import load_dotenv
 
@@ -45,6 +46,35 @@ REQUEST_TIMEOUT_SECONDS = 30
 
 # How many trials the summary step looks at.
 TOP_N_FOR_SUMMARY = 5
+
+# --- Phase 7: dataset builder ---------------------------------------------
+# Trials whose start date falls in these years (inclusive) are downloaded.
+DATASET_START_YEAR = 2010
+DATASET_END_YEAR = 2020
+
+# Final outcome -> label. Any other status is excluded (see LEARNING.md, Phase 7).
+LABELS = {"COMPLETED": 0, "TERMINATED": 1}
+
+# The API allows up to 1,000 studies per page.
+DATASET_PAGE_SIZE = 1000
+
+# Be polite: pause between requests, and retry busy/server errors with backoff.
+DATASET_REQUEST_DELAY_SECONDS = 1.0
+DATASET_MAX_RETRIES = 5
+DATASET_TIMEOUT_SECONDS = 60
+
+# Sections cached per study. resultsSection is skipped: it is posted after the
+# trial ends (so it would leak the answer) and it is half the download size.
+DATASET_FIELDS = "protocolSection,derivedSection,hasResults"
+
+# Identifies us to the API (good manners for bulk downloads).
+USER_AGENT = "TrialScout/1.0 (student portfolio project; github.com/SurajGupta-27/TrialScout)"
+
+# Where data lives. raw/ and processed/ are git-ignored; reports are committed.
+DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+RAW_DIR = DATA_DIR / "raw"
+PROCESSED_DIR = DATA_DIR / "processed"
+DATASET_PATH = PROCESSED_DIR / "trials.parquet"
 
 
 def get_api_key() -> str:

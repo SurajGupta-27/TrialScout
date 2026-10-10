@@ -88,6 +88,10 @@ tests/test_questions.json   30 evaluation questions with expected filters
 tests/evaluate.py           evaluation script (metrics + JSON results)
 tests/test_validation.py    validator tests with planted errors (no API key needed)
 tests/try_extraction.py     quick 15-question filter check used while building
+src/dataset/                ML dataset builder: download.py, build.py, report.py, columns.py
+data/data_report.md         row count, class balance, missing values (generated)
+data/DATA_DICTIONARY.md     every dataset column and whether it is known at trial start
+tests/test_dataset.py       dataset builder tests (offline)
 LEARNING.md                 concepts, design decisions and interview Q&A per phase
 ```
 

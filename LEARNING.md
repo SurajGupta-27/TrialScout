@@ -278,3 +278,57 @@ A: No. Zero means the grounded prompt worked on these questions: all 131 IDs and
 
 **Q: What would you improve next?**
 A: A larger, unseen test set to get a fair score after tuning. Support for several phases or countries per search (the API supports `OR` in the advanced filter). Showing the city-level locations that matched the user's country. And caching across users, to stretch the free-tier quota on the deployed app.
+
+---
+
+## Phase 7 – Dataset builder (start of my own ML model)
+
+### What was built
+| File | Job |
+|---|---|
+| `src/dataset/download.py` | Downloads finished interventional trials (start date 2010–2020) page by page, caches every page, and resumes after a stop. |
+| `src/dataset/columns.py` | One list describing every column: type, API source, meaning, and whether it is known at trial start. |
+| `src/dataset/build.py` | Flattens cached studies into one row each, labels them, applies and counts exclusions, saves `data/processed/trials.parquet`. |
+| `src/dataset/report.py` | Generates `data/data_report.md/.json` (row count, class balance, missing values) and `data/DATA_DICTIONARY.md`. |
+| `tests/test_dataset.py` | 15 offline tests: parsing, labels, exclusions, report numbers, and download/resume with a fake API. |
+
+### The label
+Only trials with a **final** outcome are used: `COMPLETED = 0`, `TERMINATED = 1`. Everything else is left out:
+- **WITHDRAWN** (7,352 in the window): these trials stopped *before enrolling anyone*. That is a different event from "started, then failed". Their actual enrollment is 0, so a model would learn "enrollment 0 → withdrawn" instead of anything useful.
+- **RECRUITING, ACTIVE, SUSPENDED, UNKNOWN…** (44,395): we don't know how they end yet.
+
+### Concepts
+- **Pagination with tokens**: the API returns at most 1,000 studies per page plus a `nextPageToken`. Sending that token back gives the next page. There is no "page 7" jump, so the token is the bookmark we save.
+- **Resumable downloads**: after each page we save the page file *first*, then `state.json` (pages done, next token). If the program stops between the two, that page is simply fetched again. Both files are written to a temp file and then renamed (`os.replace`), so a crash can never leave a half-written file.
+- **Consistent snapshots**: the registry is refreshed daily. If a year's download straddled a refresh, it could mix two versions and miss or duplicate studies. We store the API's `dataTimestamp` when a year starts and check it again at the end (and when resuming). If it changed, that year is downloaded again.
+- **Polite downloading**: 1 s pause between requests, a `User-Agent` naming the project, a 60 s timeout, and retries with exponential backoff (5, 10, 20, 40 s) only for 429/5xx/network errors. Other errors stop immediately with a clear message.
+- **Dependency injection for testing**: `download_year()` receives the `fetch` and `get_snapshot` functions as arguments. The real program passes functions that call the API; the tests pass a `FakeAPI`, so resume, expired tokens and snapshot changes are tested in milliseconds without the network.
+- **Verifying completeness**: page 1 asks for `countTotal`. At the end of each year the number of studies received must equal that count, or the download fails loudly. All 11 years matched exactly (155,288 studies).
+- **Parquet vs CSV**: Parquet stores column types (dates, nullable integers, booleans) and list columns (conditions, countries) directly. It is also compressed: 19 MB instead of the 463 MB raw cache.
+- **Nullable types**: pandas `Int64`/`boolean` (capital I) can hold missing values. Plain `int64` can't, and would silently turn a column with gaps into floats.
+- **Leakage**: a column is leakage if it is only known *after* the outcome happens: completion date, `why_stopped`, `has_results`, *actual* enrollment. They are kept for analysis, but the data dictionary marks them `no`, so Phase 8 can't use them by accident.
+
+### Design decisions
+- **One query per start year**: about 15 pages each. Resuming, verifying counts and restarting after a refresh all work per year, so a problem costs at most one year, not the whole download. The 11 per-year counts were checked to add up exactly to the single-query total.
+- **Skip `resultsSection`**: it is posted after the trial ends (pure leakage) and was over half of each page's size.
+- **Keep raw pages, build separately**: Phase 8 may need fields we didn't flatten yet. Re-building takes about 50 s, while re-downloading takes about 20 min.
+- **Generate docs from code**: the data dictionary is produced from `columns.py`, and the report from the data. Nothing is typed by hand, so the numbers can't drift.
+- **Windows**: every file is opened with `encoding="utf-8"`. Without it, Python on Windows uses cp1252 and crashed on the first page during planning.
+- **COVID keyword count, tuned on real text**: a first pattern also matched the 2009 H1N1 "pandemic" and the company "Covidien", and missed spellings like "SARSCov2". The final pattern was checked against the actual `why_stopped` texts.
+
+### Measured results (registry snapshot 2026-10-09)
+- 207,035 interventional trials started 2010–2020; 155,288 are COMPLETED or TERMINATED; 0 more were dropped after download (no duplicates, no missing start dates).
+- **Class balance: 137,913 completed (88.8%) vs 17,375 terminated (11.2%)**, which is imbalanced. Accuracy will be a misleading metric in Phase 9 (always guessing "completed" scores 88.8%).
+- Terminated rate per start year stays between 10.3% and 12.4%.
+- 1,336 of the terminated trials mention COVID-19 in `why_stopped`. This happened in *every* start year, not just 2020, because long trials were still running in 2020.
+- Real interruption test: the download was killed in the middle of 2011. The next run skipped 2010, resumed 2011 after page 3, and finished with exact counts. One real network error was retried and recovered automatically.
+
+### Likely interview questions
+**Q: How did you build your training dataset?**
+A: From the ClinicalTrials.gov API v2. I downloaded every interventional trial that started 2010–2020 and ended as COMPLETED (label 0) or TERMINATED (label 1), which gave 155,288 trials with about 11% terminated. The download is split by start year, caches every page, and resumes from a saved page token. It checks that the number of studies received matches the API's total. A separate build step flattens each study into 48 columns, saves Parquet, and generates a data report and data dictionary.
+
+**Q: Why did you exclude withdrawn trials?**
+A: A withdrawn trial never enrolled anyone. That's a different question ("will this trial start?") from mine ("will a running trial finish?"). Its enrollment is also 0 by definition, so the model would learn a shortcut instead of a real pattern. I recorded how many I excluded (7,352) so the choice is visible, and I may model them separately later.
+
+**Q: What is data leakage and how did you guard against it at this stage?**
+A: Leakage is when a feature contains information you wouldn't have at prediction time, so the model looks great in testing and fails in real use. For example, `why_stopped` is filled almost only for terminated trials, so it nearly *is* the label. Every column in my data dictionary is marked yes, caution or no for "known at trial start". "Caution" covers fields like enrollment, which is planned at the start but overwritten with the actual number at the end. Phase 8 audits these before any feature is used.

@@ -13,3 +13,7 @@ venv/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Data (Phase 7) - raw API pages and the built dataset are large; only reports are committed
+data/raw/
+data/processed/
